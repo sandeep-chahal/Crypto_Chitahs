@@ -6,6 +6,7 @@
 const hre = require("hardhat");
 
 async function main() {
+  const [deployer] = await hre.ethers.getSigners();
   // Hardhat always runs the compile task when running scripts with its command
   // line interface.
   //
@@ -14,12 +15,37 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Greeter = await hre.ethers.getContractFactory("Greeter");
-  const greeter = await Greeter.deploy("Hello, Hardhat!");
+  const CryptoChitahs = await hre.ethers.getContractFactory("CryptoChitahs");
+  const cryptoChitahs = await CryptoChitahs.deploy(
+    "CryptoChitahs",
+    "CC",
+    3974,
+    deployer.address,
+    deployer.address,
+    "https://cloudflare-ipfs.com/ipfs/QmXa9ZGusuAzTuXZviqcdu8fcF7ihpyjcUEw8Gk5n4gHgf/"
+  );
 
-  await greeter.deployed();
+  await cryptoChitahs.deployed();
 
-  console.log("Greeter deployed to:", greeter.address);
+  console.log("CryptoChitahs deployed to:", cryptoChitahs.address);
+
+  // minting
+  const mintTx1 = await cryptoChitahs
+    .connect(deployer)
+    .mint(deployer.address, 1);
+  await mintTx1.wait();
+
+  const mintTx2 = await cryptoChitahs
+    .connect(deployer)
+    .mint(deployer.address, 15);
+  await mintTx2.wait();
+
+  const mintTx3 = await cryptoChitahs
+    .connect(deployer)
+    .mint(deployer.address, 3456);
+  await mintTx3.wait();
+
+  console.log(await cryptoChitahs.balanceOf(deployer.address));
 }
 
 // We recommend this pattern to be able to use async/await everywhere
