@@ -141,4 +141,33 @@ describe("CryptoChitahs", function () {
       ).to.be.revertedWith("ERC721: transfer to the zero address");
     });
   });
+
+  describe("Other", () => {
+    it("should change owner if called by owner", async () => {
+      const tx = await cryptoChitahs
+        .connect(contractOwner)
+        .setOwner(user1.address);
+      await tx.wait();
+
+      expect(await cryptoChitahs.owner()).to.be.equal(user1.address);
+    });
+    it("should not change owner if not called by owner", async () => {
+      await expect(
+        cryptoChitahs.connect(minter).setOwner(user1.address)
+      ).to.be.revertedWith("Only owner can perform this action");
+    });
+    it("should change minter if called by owner", async () => {
+      const tx = await cryptoChitahs
+        .connect(contractOwner)
+        .setMinter(user1.address);
+      await tx.wait();
+
+      expect(await cryptoChitahs.minter()).to.be.equal(user1.address);
+    });
+    it("should not change minter if not called by owner", async () => {
+      await expect(
+        cryptoChitahs.connect(minter).setMinter(user1.address)
+      ).to.be.revertedWith("Only owner can perform this action");
+    });
+  });
 });

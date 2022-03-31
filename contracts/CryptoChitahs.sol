@@ -41,8 +41,18 @@ contract CryptoChitahs is ERC721URIStorage {
         return baseURI;
     }
 
+    function setOwner(address _owner) external onlyOwner returns (bool) {
+        owner = _owner;
+        return true;
+    }
+
+    function setMinter(address _minter) external onlyOwner returns (bool) {
+        minter = _minter;
+        return true;
+    }
+
     function mint(address to, uint256 tokenId)
-        public
+        external
         onlyMinter
         returns (uint256)
     {
