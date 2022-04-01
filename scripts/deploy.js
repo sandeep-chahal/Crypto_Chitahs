@@ -15,37 +15,54 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+
+  // deploy nft collection
   const CryptoChitahs = await hre.ethers.getContractFactory("CryptoChitahs");
   const cryptoChitahs = await CryptoChitahs.deploy(
     "CryptoChitahs",
     "CC",
     3974,
     deployer.address,
-    deployer.address,
+    hre.ethers.constants.AddressZero,
     "https://cloudflare-ipfs.com/ipfs/QmXa9ZGusuAzTuXZviqcdu8fcF7ihpyjcUEw8Gk5n4gHgf/"
   );
 
   await cryptoChitahs.deployed();
-
   console.log("CryptoChitahs deployed to:", cryptoChitahs.address);
+
+  const MarketPlace = await hre.ethers.getContractFactory("MarketPlace");
+  const marketPlace = await MarketPlace.deploy(
+    deployer.address,
+    cryptoChitahs.address,
+    true,
+    hre.ethers.utils.parseEther("1.25")
+  );
+  console.log("MarketPlace deployed to:", marketPlace.address);
+  // update the minter on nft collection
+  const tx = await cryptoChitahs
+    .connect(deployer)
+    .setMinter(marketPlace.address);
+  await tx.wait();
+  console.log("Minter updated");
 
   // minting
   const mintTx1 = await cryptoChitahs
     .connect(deployer)
     .mint(deployer.address, 1);
   await mintTx1.wait();
+  console.log("1st minting done");
 
   const mintTx2 = await cryptoChitahs
     .connect(deployer)
     .mint(deployer.address, 15);
   await mintTx2.wait();
+  console.log("2nd minting done");
 
   const mintTx3 = await cryptoChitahs
     .connect(deployer)
     .mint(deployer.address, 3456);
   await mintTx3.wait();
-
-  console.log(await cryptoChitahs.balanceOf(deployer.address));
+  console.log("3rd minting done");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
