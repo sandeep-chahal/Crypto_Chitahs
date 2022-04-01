@@ -3,7 +3,7 @@ import Button from "../button";
 
 const Hero = () => {
   return (
-    <section className="grid grid-cols-2 gap-4 px-40 text-zinc-200 h-[80vh]">
+    <section className="grid grid-cols-2 gap-4 px-40 h-[80vh]">
       {/* Left Side */}
       <div className="flex flex-col justify-center items-start text-[17char]">
         <h1 className="text-5xl font-black mb-2 font-sans">
