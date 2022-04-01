@@ -1,9 +1,9 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-describe("CryptoChitahs", () => {
+describe("Marketplace", () => {
   let marketPlace;
-  let contractOwner, user1, user2, user3;
+  let contractOwner, user1;
   const NAME = "CryptoChitahs";
   const SYMBOL = "CC";
   const TOTALSUPPLY = 3974;
@@ -12,7 +12,7 @@ describe("CryptoChitahs", () => {
   let cryptoChitahs;
 
   beforeEach(async () => {
-    [contractOwner, user1, user2, user3] = await ethers.getSigners();
+    [contractOwner, user1] = await ethers.getSigners();
 
     // deploy NFT collection
     const CryptoChitahs = await ethers.getContractFactory("CryptoChitahs");
@@ -118,7 +118,7 @@ describe("CryptoChitahs", () => {
     });
   });
 
-  describe.only("Mint", () => {
+  describe("Mint", () => {
     it("should mint a NFT if right amount is paid", async () => {
       // with only base price
       await (
@@ -199,6 +199,29 @@ describe("CryptoChitahs", () => {
         })
       ).wait();
       expect(await marketPlace.totalMinted()).to.be.equal(2);
+    });
+
+    it("should transfer eth to owner when minted", async () => {
+      const initialBalanceOfOwner = await contractOwner.getBalance();
+      const initialBalanceOfBuyer = await user1.getBalance();
+
+      const nftPrice = ethers.utils.parseEther("1.25");
+
+      const tx = await marketPlace.connect(user1).mint(10, { value: nftPrice });
+      const rc = await tx.wait();
+
+      const finalBalanceOfOwner = await contractOwner.getBalance();
+      const finalBalanceOfBuyer = await user1.getBalance();
+
+      expect(finalBalanceOfOwner).to.be.equal(
+        initialBalanceOfOwner.add(nftPrice)
+      );
+
+      const weiSpentOnTx = await tx.gasPrice.mul(await rc.gasUsed);
+      const totalSpentByBuyer = nftPrice.add(weiSpentOnTx);
+      expect(finalBalanceOfBuyer).to.be.equal(
+        initialBalanceOfBuyer.sub(totalSpentByBuyer)
+      );
     });
   });
 });
