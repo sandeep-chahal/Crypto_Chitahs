@@ -1,5 +1,11 @@
+import Hero from "../components/hero";
+
 const Home = () => {
-  return <div className="text-red-700">Hello Web3</div>;
+  return (
+    <div className="bg-slate-900 min-h-screen">
+      <Hero />
+    </div>
+  );
 };
 
 export default Home;
