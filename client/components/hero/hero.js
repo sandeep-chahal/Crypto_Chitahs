@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../button";
+import Image from "next/image";
 
 const Hero = () => {
   return (
@@ -21,7 +21,12 @@ const Hero = () => {
       </div>
       {/* Right Side */}
       <div className="flex justify-center items-center">
-        <img className="rounded-2xl h-[50vh]" src="/6.png" />
+        <img
+          width={400}
+          height={400}
+          className="rounded-2xl hover:rotate-12 transition-transform"
+          src="https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/6.png&w=600&h=600&output=webp"
+        />
       </div>
     </section>
   );
