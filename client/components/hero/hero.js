@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 
 const Hero = () => {
   return (
@@ -14,7 +13,26 @@ const Hero = () => {
           community. The utility of the Game Changers Academy, and the ability
           to contribute in saving wild cheetahs from extinction.
         </p>
-        {/* <Button>Discover</Button> */}
+        {/* info */}
+        <div className="flex justify-center mt-5 text-lg">
+          {/* number of nfts */}
+          <div className="mr-5">
+            <div className="font-black underline underline-offset-2">4k</div>
+            <div className="text-xs font-thin">NFTs</div>
+          </div>
+          {/* base price */}
+          <div className="mr-5">
+            <div className="font-black underline underline-offset-2">
+              1.25 ETH
+            </div>
+            <div className="text-xs font-thin">Base Price</div>
+          </div>
+          {/* minted */}
+          <div>
+            <div className="font-black underline underline-offset-2">550</div>
+            <div className="text-xs font-thin">Minted</div>
+          </div>
+        </div>
         <button className="mt-10 font-semibold border-2 rounded-md px-5 py-2 hover:bg-white hover:-translate-y-2 hover:text-slate-900 transition-all">
           Discover
         </button>
