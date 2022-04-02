@@ -3,6 +3,7 @@ import Nav from "../components/nav";
 import ListingPreview from "../components/listing-preview";
 import RecentlyMinted from "../components/recently-minted";
 import RecentlySold from "../components/recently-sold";
+import Community from "../components/community";
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <Hero />
       <ListingPreview />
       <RecentlyMinted />
+      <Community />
       <RecentlySold />
       <div className="h-[30vh]" />
     </div>
