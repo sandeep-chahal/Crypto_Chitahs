@@ -1,14 +1,6 @@
 import React from "react";
 import Card from "../card";
-
-const nfts = Array(8)
-  .fill(0)
-  .map((_, i) => ({
-    name: `Crypto Chitahs #${i + 1}`,
-    image: `https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${
-      i + 1
-    }.png`,
-  }));
+import { getSampleNfts } from "../../utils";
 
 const ListingPreview = () => {
   return (
@@ -24,11 +16,9 @@ const ListingPreview = () => {
         </button>
       </h2>
       <ul className="flex flex-wrap justify-between">
-        {Array(8)
-          .fill(0)
-          .map((_, i) => (
-            <Card nft={nfts[i]} key={i} />
-          ))}
+        {getSampleNfts().map((nft, i) => (
+          <Card nft={nft} key={i} />
+        ))}
       </ul>
     </section>
   );

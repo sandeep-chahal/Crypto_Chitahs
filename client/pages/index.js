@@ -1,6 +1,7 @@
 import Hero from "../components/hero";
 import Nav from "../components/nav";
 import ListingPreview from "../components/listing-preview";
+import RecentlyMinted from "../components/recently-minted";
 
 const Home = () => {
   return (
@@ -8,6 +9,7 @@ const Home = () => {
       <Nav />
       <Hero />
       <ListingPreview />
+      <RecentlyMinted />
       <div className="h-[30vh]" />
     </div>
   );

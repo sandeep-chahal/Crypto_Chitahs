@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Card = ({ nft }) => {
   return (
-    <div className="bg-slate-100 text-slate-900 rounded-lg p-3 shadow-lg shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-transform">
+    <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-lg shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-transform">
       <img
         src={`https://images.weserv.nl/?url=${nft.image}&w=400&h=400&output=webp`}
         width={200}
