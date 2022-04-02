@@ -4,6 +4,7 @@ import ListingPreview from "../components/listing-preview";
 import RecentlyMinted from "../components/recently-minted";
 import RecentlySold from "../components/recently-sold";
 import Community from "../components/community";
+import Footer from "../components/footer";
 
 const Home = () => {
   return (
@@ -14,7 +15,7 @@ const Home = () => {
       <RecentlyMinted />
       <Community />
       <RecentlySold />
-      <div className="h-[30vh]" />
+      <Footer />
     </div>
   );
 };
