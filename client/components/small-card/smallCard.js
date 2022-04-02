@@ -2,12 +2,13 @@ import React from "react";
 
 const SmallCard = ({ nft }) => {
   return (
-    <div className="flex my-4 items-start">
+    <div className="flex my-4 p-2 px-4 items-start hover:bg-slate-200 rounded-lg transition-all cursor-pointer group">
       {/* left */}
       <img
         width={150}
         height={150}
         src={`https://images.weserv.nl/?url=${nft.image}&w=300&h=300&output=webp`}
+        className="rounded-lg group-hover:scale-95 transition-all"
       />
       {/* right */}
       <div className="ml-3">

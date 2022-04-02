@@ -3,14 +3,14 @@ import React from "react";
 const WideCard = ({ nft, className }) => {
   return (
     <div
-      className={`bg-slate-100 text-slate-800 rounded-lg p-2 mx-4 my-6 flex ${className}`}
+      className={`bg-slate-100 text-slate-800 rounded-lg p-2 mx-4 my-6 flex group hover:-translate-y-2 transition-all cursor-pointer ${className}`}
     >
       {/* left */}
       <img
         src={`https://images.weserv.nl/?url=${nft.image}&w=400&h=400&output=webp`}
         width={150}
         height={150}
-        className="rounded-lg"
+        className="rounded-lg group-hover:translate-y-4 transition-all"
       />
       {/* right */}
       <div className="px-4 ">

@@ -3,12 +3,12 @@ import Image from "next/image";
 
 const Card = ({ nft }) => {
   return (
-    <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-lg shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-transform">
+    <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-sm shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-all group">
       <img
         src={`https://images.weserv.nl/?url=${nft.image}&w=400&h=400&output=webp`}
         width={200}
         height={200}
-        className="rounded-lg"
+        className="rounded-lg group-hover:scale-125 group-hover:-translate-y-5 transition-all"
       />
       <div className="py-1">
         <h3 className="font-bold text-lg">{nft.name}</h3>
