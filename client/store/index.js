@@ -24,6 +24,7 @@ const ContextProvider = ({ children }) => {
         setProvider,
         account,
         setAccount,
+        attributes,
       }}
     >
       {children}
