@@ -1,17 +1,17 @@
 import React from "react";
-import Image from "next/image";
 
-const Card = ({ nft }) => {
+const Card = ({ nftNumber }) => {
   return (
     <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-sm shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-all group">
       <img
-        src={`https://images.weserv.nl/?url=${nft.image}&w=400&h=400&output=webp`}
+        src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=400&h=400&output=webp`}
         width={200}
         height={200}
+        loading="lazy"
         className="rounded-lg group-hover:scale-125 group-hover:-translate-y-5 transition-all"
       />
       <div className="py-1">
-        <h3 className="font-bold text-lg">{nft.name}</h3>
+        <h3 className="font-bold text-lg">Crypto Chitahs #{nftNumber}</h3>
         <button className="flex items-center group">
           View{" "}
           <img

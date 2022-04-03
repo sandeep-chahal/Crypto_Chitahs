@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -33,9 +34,11 @@ const Hero = () => {
             <div className="text-xs font-thin">Minted</div>
           </div>
         </div>
-        <button className="mt-10 font-semibold border-2 rounded-md px-5 py-2 hover:bg-white hover:-translate-y-2 hover:text-slate-900 transition-all">
-          Discover
-        </button>
+        <Link href="/browse">
+          <a className="mt-10 font-semibold border-2 rounded-md px-5 py-2 hover:bg-white hover:-translate-y-2 hover:text-slate-900 transition-all">
+            Browse
+          </a>
+        </Link>
       </div>
       {/* Right Side */}
       <div className="flex justify-center items-center">

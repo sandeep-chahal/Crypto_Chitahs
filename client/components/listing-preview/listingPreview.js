@@ -17,7 +17,7 @@ const ListingPreview = () => {
       </h2>
       <ul className="flex flex-wrap justify-between">
         {getSampleNfts().map((nft, i) => (
-          <Card nft={nft} key={i} />
+          <Card nftNumber={i + 1} key={i} />
         ))}
       </ul>
     </section>
