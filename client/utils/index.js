@@ -17,3 +17,17 @@ export const getSampleNfts = (n = 0, t = 8) => {
       price: "1.25",
     }));
 };
+export const importDb = async (db) => {
+  const res = await fetch("/metadata-minimized.json");
+  const { mapping, data } = await res.json();
+
+  const parsedData = data.map((attrs, i) => {
+    const temp = { key: i + 1 };
+    for (let i = 0; i < attrs.length; i = i + 2) {
+      temp[mapping[attrs[i]]] = mapping[attrs[i + 1]];
+    }
+    return temp;
+  });
+
+  return parsedData;
+};
