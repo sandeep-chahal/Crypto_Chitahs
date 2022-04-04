@@ -139,12 +139,15 @@ class Collection {
       request.onsuccess = function (event) {
         var cursor = event.target.result;
         if (cursor) {
+          let shouldAdd = true;
           filter.forEach((f, i) => {
-            if (cursor.value[f.key] === f.value) {
-              results.push({ ...cursor.value });
+            if (cursor.value[f.key] === f.value && shouldAdd) {
+              shouldAdd = true;
+            } else {
+              shouldAdd = false;
             }
           });
-
+          if (shouldAdd) results.push({ ...cursor.value });
           cursor.continue();
         }
       };

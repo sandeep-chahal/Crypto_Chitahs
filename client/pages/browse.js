@@ -1,21 +1,44 @@
 import React, { useState, useEffect, useRef } from "react";
 import Card from "../components/Card";
-
+import FilterSelector from "../components/filter-selector";
+import Attribute from "../components/attribute";
+import { useStore } from "../store";
 const CARDS_PER_PAGE = 100;
 
 const Browse = () => {
-  const [cursor, setCursor] = useState(1);
+  const { attributes } = useStore();
+  const [page, setPage] = useState(1);
+  const [filterPopup, setFilterPopup] = useState(false);
+  const [filters, setFilters] = useState({});
+  const [filteredItems, setFilteredItems] = useState([]);
   const input = useRef();
 
+  const isFilterApplied = Object.keys(filters).length !== 0;
+
+  useEffect(() => {
+    if (attributes === null || !isFilterApplied) return null;
+    (async () => {
+      const _filters = Object.keys(filters).map((key) => ({
+        key,
+        value: filters[key],
+      }));
+      const filteredItems = await attributes.query(_filters);
+      setFilteredItems(filteredItems);
+    })();
+  }, [filters, attributes]);
+
   const handlePageChange = (newPage, e) => {
+    if (isFilterApplied) {
+      return;
+    }
     if (newPage < 1) {
-      setCursor(1);
+      setPage(1);
       input.current.value = 1;
     } else if (newPage > 40) {
-      setCursor(40);
+      setPage(40);
       input.current.value = 40;
     } else {
-      setCursor(newPage);
+      setPage(newPage);
       console.log(input.current.value);
       input.current.value = newPage;
     }
@@ -32,9 +55,10 @@ const Browse = () => {
             src="arrow.svg"
             width={25}
             className="-rotate-90 cursor-pointer"
-            onClick={() => handlePageChange(cursor - 1)}
+            onClick={() => handlePageChange(page - 1)}
           />
           <input
+            disabled={isFilterApplied}
             ref={input}
             defaultValue={1}
             className="text-slate-800 placeholder-slate-500 border-2 rounded-md px-2 w-14 text-center mx-2"
@@ -49,18 +73,74 @@ const Browse = () => {
             src="arrow.svg"
             width={25}
             className="rotate-90 cursor-pointer"
-            onClick={() => handlePageChange(cursor + 1)}
+            onClick={() => handlePageChange(page + 1)}
           />
         </div>
       </div>
+      {/* filters */}
+      <div className="">
+        <div className="h-[1px] w-full bg-slate-200 mt-2" />
+        <div className="flex items-center mb-2">
+          <h3 className="text-xl font-bold">Filters</h3>
+          <img
+            onClick={() => setFilterPopup(!filterPopup)}
+            src="filter.svg"
+            width={20}
+            height={20}
+            className="ml-4 cursor-pointer transition-transform hover:rotate-90 active:translate-y-1"
+          />
+          <p className="ml-2">
+            {isFilterApplied ? filteredItems.length + " NFTs Found" : ""}
+          </p>
+        </div>
+        {filterPopup && (
+          <FilterSelector
+            filters={filters}
+            setFilters={(filters) => setFilters(filters)}
+            closePopup={() => setFilterPopup(false)}
+          />
+        )}
+        <ul className="flex flex-wrap items-start">
+          {Object.keys(filters).length ? (
+            Object.keys(filters).map((filterKey) => (
+              <Attribute
+                title="click to remove"
+                className=""
+                onClick={() =>
+                  setFilters((f) => {
+                    const newFilters = { ...f };
+                    delete newFilters[filterKey];
+                    return newFilters;
+                  })
+                }
+                key={filterKey}
+                name={filterKey}
+                value={filters[filterKey]}
+              />
+            ))
+          ) : (
+            <li>
+              <p>No Filters Selected</p>
+            </li>
+          )}
+        </ul>
+      </div>
       <ul className="flex flex-wrap justify-between">
-        {Array(CARDS_PER_PAGE)
-          .fill(null)
-          .map((_, i) => i + 1 + (cursor - 1) * CARDS_PER_PAGE)
-          .filter((n) => n <= 3974)
-          .map((n) => (
-            <Card key={n} nftNumber={n} />
-          ))}
+        {isFilterApplied ? (
+          filteredItems.length ? (
+            filteredItems.map((item) => (
+              <Card key={item.key} nftNumber={item.key} />
+            ))
+          ) : (
+            <p>No NFTs Found</p>
+          )
+        ) : (
+          Array(CARDS_PER_PAGE)
+            .fill(null)
+            .map((_, i) => i + 1 + (page - 1) * CARDS_PER_PAGE)
+            .filter((n) => n <= 3974)
+            .map((n) => <Card key={n} nftNumber={n} />)
+        )}
       </ul>
     </section>
   );

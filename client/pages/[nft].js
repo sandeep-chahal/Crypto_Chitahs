@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useStore } from "../store";
 import Attribute from "../components/attribute";
+
 const getImageSize = () => {
   if (typeof window === "undefined" || window.innerWidth < 2000) return 1500;
   return 2000;
