@@ -24,9 +24,19 @@ const FilterSelector = ({ closePopup, filters, setFilters }) => {
               <label className="flex items-center mb-1">{filterKey}</label>
               <select
                 value={newFilters[filterKey]}
-                onChange={(e) =>
-                  setNewFilters((f) => ({ ...f, [filterKey]: e.target.value }))
-                }
+                onChange={(e) => {
+                  if (e.target.value === "No Filter")
+                    setNewFilters((f) => {
+                      const newFilters = { ...f };
+                      delete newFilters[filterKey];
+                      return newFilters;
+                    });
+                  else
+                    setNewFilters((f) => ({
+                      ...f,
+                      [filterKey]: e.target.value,
+                    }));
+                }}
               >
                 <option>No Filter</option>
                 {_filtersOptions[filterKey].map((filter) => (
