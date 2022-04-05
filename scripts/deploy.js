@@ -38,31 +38,32 @@ async function main() {
     hre.ethers.utils.parseEther("1.25")
   );
   console.log("MarketPlace deployed to:", marketPlace.address);
+
+  // minting
+  // const mintTx1 = await cryptoChitahs
+  //   .connect(deployer)
+  //   .mint(deployer.address, 1);
+  // await mintTx1.wait();
+  // console.log("1st minting done");
+
+  // const mintTx2 = await cryptoChitahs
+  //   .connect(deployer)
+  //   .mint(deployer.address, 15);
+  // await mintTx2.wait();
+  // console.log("2nd minting done");
+
+  // const mintTx3 = await cryptoChitahs
+  //   .connect(deployer)
+  //   .mint(deployer.address, 3456);
+  // await mintTx3.wait();
+  // console.log("3rd minting done");
+
   // update the minter on nft collection
   const tx = await cryptoChitahs
     .connect(deployer)
     .setMinter(marketPlace.address);
   await tx.wait();
   console.log("Minter updated");
-
-  // minting
-  const mintTx1 = await cryptoChitahs
-    .connect(deployer)
-    .mint(deployer.address, 1);
-  await mintTx1.wait();
-  console.log("1st minting done");
-
-  const mintTx2 = await cryptoChitahs
-    .connect(deployer)
-    .mint(deployer.address, 15);
-  await mintTx2.wait();
-  console.log("2nd minting done");
-
-  const mintTx3 = await cryptoChitahs
-    .connect(deployer)
-    .mint(deployer.address, 3456);
-  await mintTx3.wait();
-  console.log("3rd minting done");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
