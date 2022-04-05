@@ -6,30 +6,43 @@ export class DB {
     this.db = null;
   }
 
-  collection(collectionName) {
+  collections(collectionNames, collectionConfigs) {
     return new Promise((resolve, reject) => {
       let openRequest = indexedDB.open(this.dbName, 1);
 
       openRequest.onupgradeneeded = function () {
         let db = openRequest.result;
-        if (!db.objectStoreNames.contains(collectionName)) {
-          // if there's no store
-          db.createObjectStore(collectionName, {
-            keyPath: "key",
-          }); // create it
-        }
+        collectionNames.forEach((collectionName) => {
+          if (!db.objectStoreNames.contains(collectionName)) {
+            // if there's no store
+            db.createObjectStore(collectionName, {
+              keyPath: "key",
+              ...collectionConfigs[collectionNames.indexOf(collectionName)],
+            }); // create it
+          }
+        });
       };
 
       openRequest.onsuccess = async () => {
         let db = openRequest.result;
         this.db = db;
-        const collection = new Collection(db, collectionName);
-        const count = await collection.count();
-        if (count !== 3974) {
-          const data = await importDb();
-          await collection.insertMany(data);
-        }
-        resolve(collection);
+
+        collectionNames.forEach(async (collectionName) => {
+          const collection = new Collection(db, collectionName);
+          // add collection to this
+          this[collectionName] = collection;
+
+          // additional setup
+          if (collectionName === "items") {
+            const count = await collection.count();
+            if (count !== 3974) {
+              const data = await importDb();
+              await collection.insertMany(data);
+            }
+          }
+        });
+
+        resolve(true);
       };
       openRequest.onerror = function (e) {
         console.log("error", e);
@@ -55,7 +68,26 @@ class Collection {
 
       request.onsuccess = function () {
         // (4)
-        console.log("Book added to the store", request.result);
+        res(true);
+      };
+
+      request.onerror = function () {
+        console.log("Error", request.error);
+        rej(request.error);
+      };
+    });
+  }
+  remove(key) {
+    return new Promise((res, rej) => {
+      let transaction = this.db.transaction(this.name, "readwrite");
+
+      // get an object store to operate on it
+      let storeItem = transaction.objectStore(this.name);
+
+      let request = storeItem.delete(key); // (3)
+
+      request.onsuccess = function () {
+        // (4)
         res(true);
       };
 
@@ -173,6 +205,21 @@ class Collection {
       };
       countRequest.onerror = () => {
         rej(countRequest.error);
+      };
+    });
+  }
+
+  getAll() {
+    return new Promise((res, rej) => {
+      var transaction = this.db.transaction(this.name, "readonly");
+      var objectStore = transaction.objectStore(this.name);
+
+      const request = objectStore.getAll();
+      request.onsuccess = (e) => {
+        res(e.target.result);
+      };
+      request.onerror = () => {
+        rej(e.error);
       };
     });
   }

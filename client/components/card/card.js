@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { useStore } from "../../store";
 
 const Card = ({ nftNumber }) => {
+  const { likedItems, updateLiked } = useStore();
   return (
     <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-sm shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-all group">
       <img
@@ -15,8 +17,18 @@ const Card = ({ nftNumber }) => {
         }}
         className="rounded-lg group-hover:scale-125 group-hover:-translate-y-5 transition-all"
       />
+
       <div className="py-1">
-        <h3 className="font-bold text-lg">Crypto Chitahs #{nftNumber}</h3>
+        <div className="flex flex-center justify-between">
+          <h3 className="font-bold text-lg">Crypto Chitahs #{nftNumber}</h3>
+          <img
+            className="cursor-pointer transition-all active:scale-125"
+            width={15}
+            height={15}
+            src={likedItems[nftNumber] ? "heart-filled.svg" : "heart.svg"}
+            onClick={() => updateLiked(nftNumber, !likedItems[nftNumber])}
+          />
+        </div>
         <Link href={`/${nftNumber}`}>
           <a className="flex items-center group">
             View{" "}

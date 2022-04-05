@@ -6,7 +6,7 @@ import { useStore } from "../store";
 const CARDS_PER_PAGE = 100;
 
 const Browse = () => {
-  const { attributes } = useStore();
+  const { db } = useStore();
   const [page, setPage] = useState(1);
   const [filterPopup, setFilterPopup] = useState(false);
   const [filters, setFilters] = useState({});
@@ -16,16 +16,16 @@ const Browse = () => {
   const isFilterApplied = Object.keys(filters).length !== 0;
 
   useEffect(() => {
-    if (attributes === null || !isFilterApplied) return null;
+    if (db === null || !isFilterApplied) return null;
     (async () => {
       const _filters = Object.keys(filters).map((key) => ({
         key,
         value: filters[key],
       }));
-      const filteredItems = await attributes.query(_filters);
+      const filteredItems = await db.items.query(_filters);
       setFilteredItems(filteredItems);
     })();
-  }, [filters, attributes]);
+  }, [filters, db]);
 
   const handlePageChange = (newPage, e) => {
     if (isFilterApplied) {

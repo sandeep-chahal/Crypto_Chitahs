@@ -12,23 +12,30 @@ const getImageSize = () => {
 const NFT = () => {
   const [attrs, setAttrs] = useState(null);
   const router = useRouter();
-  const { attributes } = useStore();
+  const { db, likedItems, updateLiked } = useStore();
   const nftNumber = parseInt(router.query.nft);
 
   useEffect(() => {
     (async () => {
-      if (attributes && nftNumber) {
+      if (db && nftNumber) {
         console.log(nftNumber);
-        const attrs = await attributes.get(nftNumber);
+        const attrs = await db.items.get(nftNumber);
         console.log(attrs);
         setAttrs(attrs);
       }
     })();
-  }, [nftNumber, attributes]);
+  }, [nftNumber, db]);
   if (!nftNumber) return null;
   return (
     <section className="min-h-[80vh] px-40 mt-10">
-      <div className="flex items-start">
+      <div className="relative flex items-start">
+        <img
+          className="absolute bottom-2 left-1 cursor-pointer invert ml-3 transition-all active:scale-125"
+          width={25}
+          height={25}
+          src={likedItems[nftNumber] ? "heart-filled.svg" : "heart.svg"}
+          onClick={() => updateLiked(nftNumber, !likedItems[nftNumber])}
+        />
         <img
           className="rounded-md w-[500px] h-[500px]"
           src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=${getImageSize()}&h=${getImageSize()}&output=webp`}
@@ -40,8 +47,10 @@ const NFT = () => {
               e.currentTarget.src = `https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png`;
           }}
         />
+
         <div className="ml-10">
           <h1 className="font-black text-6xl">Crypto Chitahs #{nftNumber}</h1>
+
           <p className="mt-5 font-medium">
             Coalition Crew 2.0 collection. What makes this project unique is the
             collective intelligence of our community. The utility of the Game
