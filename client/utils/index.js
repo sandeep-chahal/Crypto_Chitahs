@@ -1,9 +1,3 @@
-import detectEthereumProvider from "@metamask/detect-provider";
-
-export const getProvider = async () => {
-  return await detectEthereumProvider();
-};
-
 export const getSampleNfts = (n = 0, t = 8) => {
   return Array(t)
     .fill(0)

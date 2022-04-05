@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 import Search from "../search";
+import Connect from "../connect-button";
 
 const Nav = () => {
   return (
@@ -37,9 +38,7 @@ const Nav = () => {
             <Link href="/purchased">Purchased</Link>
           </li>
           <li className="mr-4 font-bold">
-            <button className="text-[#0FB979] underline font-black">
-              Connect
-            </button>
+            <Connect />
           </li>
         </ul>
       </div>

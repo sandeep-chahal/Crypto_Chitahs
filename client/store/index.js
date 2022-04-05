@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
+import { ethers } from "ethers";
+import detectEthereumProvider from "@metamask/detect-provider";
+
 import { DB } from "../utils/db";
+import MarketPlaceArtifact from "../artifacts/contracts/MarketPlace.sol/MarketPlace.json";
+import NFTArtifact from "../artifacts/contracts/CryptoChitahs.sol/CryptoChitahs.json";
 
 const context = createContext();
 
@@ -8,10 +13,77 @@ const ContextProvider = ({ children }) => {
   const [account, setAccount] = useState(null);
   const [db, setDb] = useState(null);
   const [likedItems, setLikedItems] = useState({});
+  const [web3, setWeb3] = useState({
+    provider: null,
+    nftContract: null,
+    marketPlaceContract: null,
+    account: null,
+    status: "LOADING", //LOADING, NO_PROVIDER, WRONG_NETWORK, NO_ACCOUNT, READY,
+  });
 
   useEffect(() => {
     loadAttributes();
+    loadContractsAndData();
   }, []);
+
+  const loadContractsAndData = async () => {
+    if (web3.status !== "LOADING") {
+      setWeb3({
+        status: "LOADING",
+        provider: null,
+        nftContract: null,
+        marketPlaceContract: null,
+        account: null,
+      });
+    }
+    const _provider = await detectEthereumProvider();
+    if (!_provider) {
+      console.log("Metamask not found");
+      setWeb3({
+        provider: null,
+        nftContract: null,
+        marketPlaceContract: null,
+        status: "NO_PROVIDER",
+      });
+      return;
+    }
+    const provider = new ethers.providers.Web3Provider(_provider, "any");
+    // add listeners
+    _provider.on("accountsChanged", function (accounts) {
+      window.location.reload();
+    });
+
+    _provider.on("networkChanged", function (networkId) {
+      window.location.reload();
+    });
+
+    // --------
+    const nftContract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_NFT_ADDRESS,
+      NFTArtifact.abi,
+      provider
+    );
+    const marketPlaceContract = new ethers.Contract(
+      process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS,
+      MarketPlaceArtifact.abi,
+      provider
+    );
+    const { chainId } = await provider.getNetwork();
+    const accounts = await provider.listAccounts();
+
+    setWeb3({
+      provider,
+      nftContract,
+      marketPlaceContract,
+      account: accounts.length ? accounts[0] : null,
+      status:
+        process.env.NEXT_PUBLIC_CHAIN_ID == chainId
+          ? accounts.length
+            ? "READY"
+            : "NO_ACCOUNT"
+          : "WRONG_NETWORK",
+    });
+  };
 
   const loadAttributes = async () => {
     try {
@@ -19,7 +91,6 @@ const ContextProvider = ({ children }) => {
       await db.collections(["items", "liked"], [{}, { autoIncrement: true }]);
       setDb(db);
       let _likedItems = await db.liked.getAll();
-      console.log(_likedItems);
       _likedItems = _likedItems.reduce((acc, item) => {
         acc[item.key] = true;
         return acc;
@@ -59,13 +130,10 @@ const ContextProvider = ({ children }) => {
   return (
     <context.Provider
       value={{
-        provider,
-        setProvider,
-        account,
-        setAccount,
         db,
         likedItems,
         updateLiked,
+        web3,
       }}
     >
       {children}
