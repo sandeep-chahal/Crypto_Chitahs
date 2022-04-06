@@ -67,13 +67,6 @@ const NFT = () => {
     <section className="min-h-[80vh] px-40 mt-10">
       <div className="relative flex items-start">
         <img
-          className="absolute bottom-2 left-1 cursor-pointer invert ml-3 transition-all active:scale-125"
-          width={25}
-          height={25}
-          src={likedItems[nftNumber] ? "heart-filled.svg" : "heart.svg"}
-          onClick={() => updateLiked(nftNumber, !likedItems[nftNumber])}
-        />
-        <img
           className="rounded-md w-[500px] h-[500px]"
           src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=${getImageSize()}&h=${getImageSize()}&output=webp`}
           width={getImageSize()}
@@ -87,8 +80,31 @@ const NFT = () => {
 
         <div className="ml-10">
           <h1 className="font-black text-6xl">Crypto Chitahs #{nftNumber}</h1>
-
-          <p className="mt-5 font-medium">
+          <div className="mt-5 flex items-center">
+            <img
+              title={likedItems[nftNumber] ? "Unlike" : "Like"}
+              className="cursor-pointer invert ml-3 transition-all active:scale-125"
+              width={25}
+              height={25}
+              src={likedItems[nftNumber] ? "heart-filled.svg" : "heart.svg"}
+              onClick={() => updateLiked(nftNumber, !likedItems[nftNumber])}
+            />
+            <img
+              title="Share"
+              className="cursor-pointer invert ml-3 transition-all active:scale-125"
+              width={25}
+              height={25}
+              src="share.svg"
+              onClick={() =>
+                navigator.share({
+                  title: `Crypto Chitahs #${nftNumber}`,
+                  text: `Check out this Crypto Chitahs #${nftNumber}`,
+                  url: `./${nftNumber}`,
+                })
+              }
+            />
+          </div>
+          <p className="mt-3 font-medium">
             Coalition Crew 2.0 collection. What makes this project unique is the
             collective intelligence of our community. The utility of the Game
             Changers Academy, and the ability to contribute in saving wild
@@ -119,7 +135,19 @@ const NFT = () => {
                 ? Object.keys(attrs)
                     .filter((a) => a !== "key")
                     .map((key, i) => (
-                      <Attribute key={key} name={key} value={attrs[key]} />
+                      <Attribute
+                        key={key}
+                        name={key}
+                        value={attrs[key]}
+                        onClick={() => {
+                          router.push({
+                            pathname: "/browse",
+                            query: {
+                              [key]: attrs[key],
+                            },
+                          });
+                        }}
+                      />
                     ))
                 : null}
             </ul>

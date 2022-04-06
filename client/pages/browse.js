@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 import Card from "../components/Card";
 import FilterSelector from "../components/filter-selector";
 import Attribute from "../components/attribute";
@@ -6,10 +7,11 @@ import { useStore } from "../store";
 const CARDS_PER_PAGE = 100;
 
 const Browse = () => {
+  const router = useRouter();
   const { db } = useStore();
   const [page, setPage] = useState(1);
   const [filterPopup, setFilterPopup] = useState(false);
-  const [filters, setFilters] = useState({});
+  const [filters, setFilters] = useState(router.query || {});
   const [filteredItems, setFilteredItems] = useState([]);
   const input = useRef();
 
