@@ -9,8 +9,6 @@ import NFTArtifact from "../artifacts/contracts/CryptoChitahs.sol/CryptoChitahs.
 const context = createContext();
 
 const ContextProvider = ({ children }) => {
-  const [provider, setProvider] = useState(null);
-  const [account, setAccount] = useState(null);
   const [db, setDb] = useState(null);
   const [likedItems, setLikedItems] = useState({});
   const [web3, setWeb3] = useState({
@@ -19,6 +17,7 @@ const ContextProvider = ({ children }) => {
     marketPlaceContract: null,
     account: null,
     status: "LOADING", //LOADING, NO_PROVIDER, WRONG_NETWORK, NO_ACCOUNT, READY,
+    basePrice: null,
   });
 
   useEffect(() => {
@@ -71,17 +70,35 @@ const ContextProvider = ({ children }) => {
     const { chainId } = await provider.getNetwork();
     const accounts = await provider.listAccounts();
 
+    const isWrongNetwork = process.env.NEXT_PUBLIC_CHAIN_ID != chainId;
+    let basePrice = null;
+    if (!isWrongNetwork) {
+      try {
+        basePrice = await marketPlaceContract.basePrice();
+      } catch (err) {
+        console.log(err);
+      }
+      console.log(basePrice);
+    }
+
+    console.log(
+      !isWrongNetwork
+        ? accounts.length
+          ? "READY"
+          : "NO_ACCOUNT"
+        : "WRONG_NETWORK"
+    );
     setWeb3({
       provider,
-      nftContract,
-      marketPlaceContract,
+      nftContract: !isWrongNetwork ? nftContract : null,
+      marketPlaceContract: !isWrongNetwork ? marketPlaceContract : null,
       account: accounts.length ? accounts[0] : null,
-      status:
-        process.env.NEXT_PUBLIC_CHAIN_ID == chainId
-          ? accounts.length
-            ? "READY"
-            : "NO_ACCOUNT"
-          : "WRONG_NETWORK",
+      basePrice,
+      status: !isWrongNetwork
+        ? accounts.length
+          ? "READY"
+          : "NO_ACCOUNT"
+        : "WRONG_NETWORK",
     });
   };
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { ethers } from "ethers";
 import { useStore } from "../store";
 import Attribute from "../components/attribute";
 
@@ -10,21 +11,57 @@ const getImageSize = () => {
 };
 
 const NFT = () => {
+  const [isMinted, setIsMinted] = useState(null);
+  const [price, setPrice] = useState(null);
   const [attrs, setAttrs] = useState(null);
   const router = useRouter();
-  const { db, likedItems, updateLiked } = useStore();
+  const { db, likedItems, updateLiked, web3 } = useStore();
   const nftNumber = parseInt(router.query.nft);
 
   useEffect(() => {
     (async () => {
-      if (db && nftNumber) {
-        console.log(nftNumber);
+      if (db && nftNumber && web3.marketPlaceContract) {
         const attrs = await db.items.get(nftNumber);
-        console.log(attrs);
         setAttrs(attrs);
+        let filterToMe = web3.nftContract.filters.Transfer(
+          ethers.constants.AddressZero,
+          null,
+          nftNumber
+        );
+        const [price, events] = await Promise.all([
+          web3.marketPlaceContract.getBoostedPrice([nftNumber]),
+          web3.nftContract.queryFilter(filterToMe),
+        ]);
+        console.log("events", events);
+        if (events.length > 0) {
+          console.log("Already Minted");
+          const tx = await events[0].getTransaction();
+          await tx.wait();
+          const price = tx.value;
+          setPrice(price);
+          setIsMinted(true);
+          console.log("minted price", price);
+        } else {
+          setPrice(web3.basePrice.add(price[0]));
+          setIsMinted(false);
+        }
       }
     })();
-  }, [nftNumber, db]);
+  }, [nftNumber, db, web3]);
+
+  const mintNFT = async () => {
+    if (web3.status === "READY" && price) {
+      const signer = web3.provider.getSigner();
+      const tx = await web3.marketPlaceContract
+        .connect(signer)
+        .mint(nftNumber, {
+          value: price,
+        });
+      const receipt = await tx.wait();
+      console.log(receipt);
+    }
+  };
+
   if (!nftNumber) return null;
   return (
     <section className="min-h-[80vh] px-40 mt-10">
@@ -39,8 +76,8 @@ const NFT = () => {
         <img
           className="rounded-md w-[500px] h-[500px]"
           src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=${getImageSize()}&h=${getImageSize()}&output=webp`}
-          width={getImageSize}
-          height={getImageSize}
+          width={getImageSize()}
+          height={getImageSize()}
           loading="eager"
           onError={(e) => {
             if (e.currentTarget.src.includes("images.weserv.nl"))
@@ -61,8 +98,18 @@ const NFT = () => {
             holders and our different collections at ccrewnft.com.
           </p>
           <div className="flex items-center">
-            <button className="font-semibold text-2xl bg-slate-100 text-slate-800 py-1 px-6 rounded-lg mt-5 transition-all hover:-translate-y-2">
-              Mint 1.25 ETH
+            <button
+              onClick={mintNFT}
+              disabled={!price}
+              className={`font-semibold text-2xl bg-slate-100 text-slate-800 py-1 px-6 rounded-sm mt-5 transition-all hover:-translate-y-2 ${
+                isMinted && "opacity-50 hover:translate-y-0 cursor-not-allowed"
+              } ${web3.status === "LOADING" && "opacity-50"}`}
+            >
+              {isMinted
+                ? `Minted ${ethers.utils.formatEther(price)} ETH`
+                : price
+                ? `Mint ${ethers.utils.formatEther(price)} ETH`
+                : "Loading.."}
             </button>
           </div>
           <div className="mt-5">
@@ -72,7 +119,7 @@ const NFT = () => {
                 ? Object.keys(attrs)
                     .filter((a) => a !== "key")
                     .map((key, i) => (
-                      <Attribute name={key} value={attrs[key]} />
+                      <Attribute key={key} name={key} value={attrs[key]} />
                     ))
                 : null}
             </ul>
