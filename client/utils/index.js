@@ -27,6 +27,9 @@ export const importDb = async (db) => {
   return parsedData;
 };
 
+export const shortenAddress = (address) =>
+  address.slice(0, 3) + "..." + address.slice(39);
+
 export const getFilters = () => {
   return {
     PROPERTY: ["SPECIAL"],

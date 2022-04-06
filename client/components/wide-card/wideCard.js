@@ -1,4 +1,6 @@
+import { ethers } from "ethers";
 import React from "react";
+import { shortenAddress } from "../../utils";
 
 const WideCard = ({ nft, className }) => {
   return (
@@ -7,7 +9,7 @@ const WideCard = ({ nft, className }) => {
     >
       {/* left */}
       <img
-        src={`https://images.weserv.nl/?url=${nft.image}&w=400&h=400&output=webp`}
+        src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nft.tokenId.toNumber()}.png&w=400&h=400&output=webp`}
         width={150}
         height={150}
         className="rounded-lg group-hover:translate-y-4 transition-all"
@@ -15,14 +17,18 @@ const WideCard = ({ nft, className }) => {
       {/* right */}
       <div className="px-4 ">
         <div>
-          <h3 className="font-bold text-lg">{nft.name}</h3>
+          <h3 className="font-bold text-lg">
+            Crypto Chitahs #{nft.tokenId.toNumber()}
+          </h3>
           <p>
             Minted By:{" "}
             <span className="text-blue-800 hover:underline underline-offset-4">
-              {nft.to.slice(0, 3)}...{nft.to.slice(39)}
+              {shortenAddress(nft.to)}
             </span>
           </p>
-          <div className="font-black text-xl">{nft.price} ETH</div>
+          <div className="font-black text-xl">
+            {ethers.utils.formatEther(nft.tx.value)} ETH
+          </div>
         </div>
         <button className="flex items-center group">
           View{" "}

@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
+import { ethers } from "ethers";
 
-const Hero = () => {
+const Hero = ({ basePrice, totalMinted }) => {
   return (
     <section className="grid grid-cols-2 gap-4 px-40 h-[80vh]">
       {/* Left Side */}
@@ -24,13 +25,15 @@ const Hero = () => {
           {/* base price */}
           <div className="mr-5">
             <div className="font-black underline underline-offset-2">
-              1.25 ETH
+              {ethers.utils.formatEther(basePrice)}
             </div>
             <div className="text-xs font-thin">Base Price</div>
           </div>
           {/* minted */}
           <div>
-            <div className="font-black underline underline-offset-2">550</div>
+            <div className="font-black underline underline-offset-2">
+              {totalMinted}
+            </div>
             <div className="text-xs font-thin">Minted</div>
           </div>
         </div>

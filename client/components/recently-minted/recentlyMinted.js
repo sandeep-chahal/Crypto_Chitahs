@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import WideCard from "../wide-card";
-import { getSampleNfts } from "../../utils";
 
-const RecentlyMinted = () => {
+const RecentlyMinted = ({ nfts }) => {
   const slider = useRef(null);
   const isDown = useRef(false);
   let startX = useRef(0);
   let scrollLeft = useRef(0);
+
+  console.log(nfts);
 
   useEffect(() => {
     if (slider.current) {
@@ -47,9 +48,17 @@ const RecentlyMinted = () => {
         ref={slider}
         className="flex overflow-x-auto no-scrollbar py-2 cursor-grab active:cursor-grabbing pl-36"
       >
-        {getSampleNfts(50).map((nft, i) => (
-          <WideCard nft={nft} key={i} className="min-w-max" />
-        ))}
+        {nfts && nfts.length ? (
+          nfts.map((nft, i) => (
+            <WideCard
+              nft={nft}
+              key={nft.tokenId.toNumber()}
+              className="min-w-max"
+            />
+          ))
+        ) : (
+          <p>No Minted NFTs Found</p>
+        )}
       </ul>
     </section>
   );
