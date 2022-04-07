@@ -52,7 +52,7 @@ export const parseServerSideProps = (props) => {
 export const getServerSideWeb3 = () => {
   // JSON RPC PRovider
   const provider = new ethers.providers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_JSON_RPC_URL
+    process.env.NEXT_PUBLIC_RPC_URL
   );
   const nftContract = new ethers.Contract(
     process.env.NEXT_PUBLIC_NFT_ADDRESS,
