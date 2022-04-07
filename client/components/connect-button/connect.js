@@ -18,18 +18,15 @@ const Connect = () => {
     await web3.provider.provider.request({ method: "eth_requestAccounts" });
   };
   const switchNetwork = async () => {
-    console.log(
-      "Switching to ",
-      ethers.utils.hexlify(parseInt(process.env.NEXT_PUBLIC_CHAIN_ID))
-    );
+    const chainId = ethers.utils
+      .hexlify(parseInt(process.env.REACT_APP_NETWORK_ID))
+      .replace("0x0", "0x");
     try {
       await web3.provider.provider.request({
         method: "wallet_switchEthereumChain",
         params: [
           {
-            chainId: ethers.utils.hexlify(
-              parseInt(process.env.NEXT_PUBLIC_CHAIN_ID)
-            ),
+            chainId: chainId,
           },
         ],
       });
@@ -41,9 +38,7 @@ const Connect = () => {
             method: "wallet_addEthereumChain",
             params: [
               {
-                chainId: ethers.utils.hexlify(
-                  parseInt(process.env.NEXT_PUBLIC_CHAIN_ID)
-                ), // 8001
+                chainId: chainId,
                 chainName: "Mumbai",
                 nativeCurrency: {
                   name: "MATIC Token",
