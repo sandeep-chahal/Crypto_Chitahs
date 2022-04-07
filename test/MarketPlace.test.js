@@ -83,6 +83,7 @@ describe("Marketplace", () => {
     });
 
     it("should set boosted prices if called by owner", async () => {
+      const basePrice = await marketPlace.basePrice();
       const tokenIds = [5, 10, 15, 20, 500, 1000];
       const prices = [
         ethers.utils.parseEther("0.5"),
@@ -97,11 +98,11 @@ describe("Marketplace", () => {
         .setBoostedPrice(tokenIds, prices);
       await tx.wait();
 
-      const boostedPrices = await marketPlace.getBoostedPrice(tokenIds);
+      const _prices = await marketPlace.getPrices(tokenIds);
 
       // compare boosted prices
       for (let i = 0; i < tokenIds.length; i++) {
-        expect(boostedPrices[i]).to.be.equal(prices[i]);
+        expect(_prices[i]).to.be.equal(prices[i].add(basePrice));
       }
     });
 

@@ -72,10 +72,9 @@ contract MarketPlace {
         }
     }
 
-    function getBoostedPrice(uint256[] memory _tokenIDs)
+    function getPrices(uint256[] memory _tokenIDs)
         public
         view
-        onlyOwner
         returns (uint256[] memory)
     {
         uint256 totalSupply = nft.totalSupply();
@@ -99,7 +98,7 @@ contract MarketPlace {
                 )
             );
 
-            prices[i] = boostedPrice[tokenId];
+            prices[i] = boostedPrice[tokenId] + basePrice;
         }
         return prices;
     }

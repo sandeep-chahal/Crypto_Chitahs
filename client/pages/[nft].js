@@ -33,7 +33,7 @@ const NFT = () => {
           nftNumber
         );
         const [price, events] = await Promise.all([
-          web3.marketPlaceContract.getBoostedPrice([nftNumber]),
+          web3.marketPlaceContract.getPrices([nftNumber]),
           web3.nftContract.queryFilter(filterToMe),
         ]);
         console.log("events", events);
@@ -46,7 +46,7 @@ const NFT = () => {
           setIsMinted(true);
           console.log("minted price", price);
         } else {
-          setPrice(web3.basePrice.add(price[0]));
+          setPrice(price[0]);
           setIsMinted(false);
         }
       }
