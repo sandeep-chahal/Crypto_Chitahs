@@ -7,8 +7,6 @@ const RecentlyMinted = ({ nfts }) => {
   let startX = useRef(0);
   let scrollLeft = useRef(0);
 
-  console.log(nfts);
-
   useEffect(() => {
     if (slider.current) {
       slider.current.addEventListener("mousedown", (e) => {

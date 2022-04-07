@@ -1,3 +1,7 @@
+import { ethers, BigNumber } from "ethers";
+import MarketPlaceArtifact from "../artifacts/contracts/MarketPlace.sol/MarketPlace.json";
+import NFTArtifact from "../artifacts/contracts/CryptoChitahs.sol/CryptoChitahs.json";
+
 export const getSampleNfts = (n = 0, t = 8) => {
   return Array(t)
     .fill(0)
@@ -29,6 +33,43 @@ export const importDb = async (db) => {
 
 export const shortenAddress = (address) =>
   address.slice(0, 3) + "..." + address.slice(39);
+
+export const parseServerSideProps = (props) => {
+  return props.map((prop) => ({
+    ...prop,
+    tokenId: BigNumber.from(prop.tokenId),
+    tx: {
+      ...prop.tx,
+      gasPrice: BigNumber.from(prop.tx.gasPrice),
+      maxPriorityFeePerGas: BigNumber.from(prop.tx.maxPriorityFeePerGas),
+      maxFeePerGas: BigNumber.from(prop.tx.maxFeePerGas),
+      gasLimit: BigNumber.from(prop.tx.gasLimit),
+      value: BigNumber.from(prop.tx.value),
+    },
+  }));
+};
+
+export const getServerSideWeb3 = () => {
+  // JSON RPC PRovider
+  const provider = new ethers.providers.JsonRpcProvider(
+    process.env.NEXT_PUBLIC_JSON_RPC_URL
+  );
+  const nftContract = new ethers.Contract(
+    process.env.NEXT_PUBLIC_NFT_ADDRESS,
+    NFTArtifact.abi,
+    provider
+  );
+  const marketPlaceContract = new ethers.Contract(
+    process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS,
+    MarketPlaceArtifact.abi,
+    provider
+  );
+  return {
+    provider,
+    nftContract,
+    marketPlaceContract,
+  };
+};
 
 export const getFilters = () => {
   return {

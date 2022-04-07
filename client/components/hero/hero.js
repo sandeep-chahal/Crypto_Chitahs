@@ -25,7 +25,7 @@ const Hero = ({ basePrice, totalMinted }) => {
           {/* base price */}
           <div className="mr-5">
             <div className="font-black underline underline-offset-2">
-              {ethers.utils.formatEther(basePrice)}
+              {basePrice}
             </div>
             <div className="text-xs font-thin">Base Price</div>
           </div>
