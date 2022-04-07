@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Card from "../components/Card";
+import Card from "../components/card";
 import { useStore } from "../store";
 
 const Liked = () => {

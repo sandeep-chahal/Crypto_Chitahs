@@ -18,6 +18,10 @@ const Connect = () => {
     await web3.provider.provider.request({ method: "eth_requestAccounts" });
   };
   const switchNetwork = async () => {
+    console.log(
+      "Switching to ",
+      ethers.utils.hexlify(parseInt(process.env.NEXT_PUBLIC_CHAIN_ID))
+    );
     try {
       await web3.provider.provider.request({
         method: "wallet_switchEthereumChain",
@@ -39,9 +43,15 @@ const Connect = () => {
               {
                 chainId: ethers.utils.hexlify(
                   parseInt(process.env.NEXT_PUBLIC_CHAIN_ID)
-                ),
-                rpcUrls: ["https://mumbai.polygonscan.com"],
+                ), // 8001
                 chainName: "Mumbai",
+                nativeCurrency: {
+                  name: "MATIC Token",
+                  symbol: "MATIC",
+                  decimals: 18,
+                },
+                rpcUrls: ["https://matic-mumbai.chainstacklabs.com/"],
+                blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
               },
             ],
           });

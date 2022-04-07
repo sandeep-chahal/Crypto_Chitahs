@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
-import Card from "../components/Card";
+import Card from "../components/card";
 import FilterSelector from "../components/filter-selector";
 import Attribute from "../components/attribute";
 import { useStore } from "../store";
