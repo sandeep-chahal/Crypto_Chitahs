@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ethers } from "ethers";
 import { useStore } from "../store";
 import Attribute from "../components/attribute";
+import MintButton from "../components/mint-button/mintButton";
+import Popup from "reactjs-popup";
 
 const getImageSize = () => {
   if (typeof window === "undefined" || window.innerWidth < 2000) return 1500;
@@ -14,6 +16,8 @@ const NFT = () => {
   const [isMinted, setIsMinted] = useState(null);
   const [price, setPrice] = useState(null);
   const [attrs, setAttrs] = useState(null);
+  const [minting, setMinting] = useState(false);
+  const [error, setError] = useState(null);
   const router = useRouter();
   const { db, likedItems, updateLiked, web3 } = useStore();
   const nftNumber = parseInt(router.query.nft);
@@ -51,14 +55,30 @@ const NFT = () => {
 
   const mintNFT = async () => {
     if (web3.status === "READY" && price) {
-      const signer = web3.provider.getSigner();
-      const tx = await web3.marketPlaceContract
-        .connect(signer)
-        .mint(nftNumber, {
-          value: price,
-        });
-      const receipt = await tx.wait();
-      console.log(receipt);
+      try {
+        setMinting(true);
+        const signer = web3.provider.getSigner();
+        const tx = await web3.marketPlaceContract
+          .connect(signer)
+          .mint(nftNumber, {
+            value: price,
+          });
+        const receipt = await tx.wait();
+        console.log("receipt", receipt, price);
+        setIsMinted(true);
+        setMinting(false);
+      } catch (err) {
+        console.log(err);
+        if (err.data && err.data.message) {
+          console.log(err.data.message.split("'")[1]);
+          setError(
+            "Contract threw this error: " + err.data.message.split("'")[1]
+          );
+        } else {
+          setError("Something Went Wrong!");
+        }
+        setMinting(false);
+      }
     }
   };
 
@@ -114,19 +134,13 @@ const NFT = () => {
             holders and our different collections at ccrewnft.com.
           </p>
           <div className="flex items-center">
-            <button
+            <MintButton
+              price={price}
+              disabled={!price || minting || isMinted}
+              isMinted={isMinted}
+              isMinting={minting}
               onClick={mintNFT}
-              disabled={!price}
-              className={`font-semibold text-2xl bg-slate-100 text-slate-800 py-1 px-6 rounded-sm mt-5 transition-all hover:-translate-y-2 ${
-                isMinted && "opacity-50 hover:translate-y-0 cursor-not-allowed"
-              } ${web3.status === "LOADING" && "opacity-50"}`}
-            >
-              {isMinted
-                ? `Minted ${ethers.utils.formatEther(price)} ETH`
-                : price
-                ? `Mint ${ethers.utils.formatEther(price)} ETH`
-                : "Loading.."}
-            </button>
+            />
           </div>
           <div className="mt-5">
             <h3 className="font-bold">Attributes</h3>
@@ -172,6 +186,24 @@ const NFT = () => {
           </a>
         </Link>
       </div>
+      <Popup
+        open={!!error}
+        closeOnDocumentClick
+        onClose={() => setError(null)}
+        className="bg-slate-100"
+        overlayStyle={{ background: "rgba(0,0,0,0.5)" }}
+      >
+        <div className="text-center text-slate-800 bg-slate-200 py-3 px-5 rounded-md">
+          <h2 className="font-semibold text-xl">Transaction Failed</h2>
+          <p>{error}</p>
+          <button
+            onClick={() => setError(null)}
+            className="mt-3 py-1 px-3 rounded-md font-semibold border-2 bg-slate-800 text-slate-200"
+          >
+            Okay!
+          </button>
+        </div>
+      </Popup>
     </section>
   );
 };
