@@ -40,10 +40,12 @@ export async function getStaticProps() {
   const soldFilter = web3.nftContract.filters.Transfer(null);
 
   // getting events
-  let [mintedEvents, soldEvents] = await Promise.all([
+  let mintedEvents, soldEvents;
+  [mintedEvents, soldEvents] = await Promise.all([
     web3.nftContract.queryFilter(mintedFilter),
-    web3.nftContract.queryFilter(soldFilter, -50),
+    web3.nftContract.queryFilter(soldFilter, -1000),
   ]);
+
   _totalMinted = mintedEvents.length;
   // restrict to last 10 events
   soldEvents = soldEvents.filter((event, i) => i < 10);
@@ -76,7 +78,7 @@ export async function getStaticProps() {
       };
     })
   );
-
+  console.log("got server side props");
   // Pass data to the page via props
   return {
     props: {
