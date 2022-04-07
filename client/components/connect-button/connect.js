@@ -18,9 +18,10 @@ const Connect = () => {
     await web3.provider.provider.request({ method: "eth_requestAccounts" });
   };
   const switchNetwork = async () => {
-    const chainId = ethers.utils
-      .hexlify(parseInt(process.env.REACT_APP_NETWORK_ID))
-      .replace("0x0", "0x");
+    const chainId = ethers.utils.hexlify(
+      parseInt(process.env.NEXT_PUBLIC_CHAIN_ID)
+    );
+    console.log("Switching to ", chainId);
     try {
       await web3.provider.provider.request({
         method: "wallet_switchEthereumChain",
