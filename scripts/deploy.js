@@ -35,7 +35,7 @@ async function main() {
     deployer.address,
     cryptoChitahs.address,
     true,
-    hre.ethers.utils.parseEther("1.25")
+    hre.ethers.utils.parseEther("0.1")
   );
   console.log("MarketPlace deployed to:", marketPlace.address);
 

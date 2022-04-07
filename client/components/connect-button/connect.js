@@ -40,14 +40,9 @@ const Connect = () => {
             params: [
               {
                 chainId: chainId,
-                chainName: "Mumbai",
-                nativeCurrency: {
-                  name: "MATIC Token",
-                  symbol: "MATIC",
-                  decimals: 18,
-                },
-                rpcUrls: ["https://matic-mumbai.chainstacklabs.com/"],
-                blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+                chainName: process.NEXT_PUBLIC_NETWORK_NAME,
+                rpcUrls: [process.env.NEXT_PUBLIC_RPC_URL],
+                blockExplorerUrls: [process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL],
               },
             ],
           });

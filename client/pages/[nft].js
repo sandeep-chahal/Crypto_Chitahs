@@ -32,10 +32,12 @@ const NFT = () => {
           null,
           nftNumber
         );
+
         const [price, events] = await Promise.all([
           web3.marketPlaceContract.getPrices([nftNumber]),
           web3.nftContract.queryFilter(filterToMe),
         ]);
+
         console.log("events", events);
         if (events.length > 0) {
           console.log("Already Minted");
