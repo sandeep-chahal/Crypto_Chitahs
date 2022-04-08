@@ -3,8 +3,10 @@ import Link from "next/link";
 
 import Search from "../search";
 import Connect from "../connect-button";
+import { useRouter } from "next/router";
 
 const Nav = () => {
+  const router = useRouter();
   return (
     // wrapper
     <header className="pt-10">
@@ -16,7 +18,11 @@ const Nav = () => {
             src="https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/2894.png&w=64&h=64&output=webp"
             className="w-8 rounded-full mr-2 shadow-md shadow-[#F6F193]"
           />
-          <h1 className="font-black">Crypto Chitahs</h1>
+          <h1 className="font-black">
+            <Link href="/">
+              <a>Crypto Chitahs</a>
+            </Link>
+          </h1>
         </div>
         {/* right */}
         <ul className="flex">
@@ -24,18 +30,49 @@ const Nav = () => {
             <Search />
           </li>
           <li className="mr-4 font-bold">
-            <Link href="/">Home</Link>
-          </li>
-          <li className="mr-4 font-bold">
-            <Link href="/browse">
-              <a>Browse</a>
+            <Link href="/">
+              <a
+                className={`${
+                  router.route === "/" && "underline underline-offset-1"
+                }`}
+              >
+                Home
+              </a>
             </Link>
           </li>
           <li className="mr-4 font-bold">
-            <Link href="/liked">Liked</Link>
+            <Link href="/browse">
+              <a
+                className={`${
+                  router.route === "/browse" && "underline underline-offset-1"
+                }`}
+              >
+                Browse
+              </a>
+            </Link>
           </li>
           <li className="mr-4 font-bold">
-            <Link href="/purchased">Purchased</Link>
+            <Link href="/liked">
+              <a
+                className={`${
+                  router.route === "/liked" && "underline underline-offset-1"
+                }`}
+              >
+                Liked
+              </a>
+            </Link>
+          </li>
+          <li className="mr-4 font-bold">
+            <Link href="/purchased">
+              <a
+                className={`${
+                  router.route === "/purchased" &&
+                  "underline underline-offset-1"
+                }`}
+              >
+                Purchased
+              </a>
+            </Link>
           </li>
           <li className="mr-4 font-bold">
             <Connect />

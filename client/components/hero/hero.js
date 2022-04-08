@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { ethers } from "ethers";
 
 const Hero = ({ basePrice, totalMinted }) => {
+  const [gifLoaded, setGifLoaded] = useState(false);
+
+  const setOnLoadTimer = (ref) => {
+    if (ref.complete || gifLoaded) {
+      setGifLoaded(true);
+    } else setTimeout(() => setOnLoadTimer(ref), 100);
+  };
+
   return (
     <section className="grid grid-cols-2 gap-4 px-40 h-[80vh]">
       {/* Left Side */}
@@ -48,8 +55,22 @@ const Hero = ({ basePrice, totalMinted }) => {
         <img
           width={400}
           height={400}
-          className="rounded-2xl -scale-x-100 hover:rotate-6 hover:-scale-x-105 hover:scale-y-105 hover:shadow-2xl transition-transform"
+          className={`rounded-2xl -scale-x-100 hover:rotate-6 hover:-scale-x-105 hover:scale-y-105 hover:shadow-2xl transition-transform ${
+            gifLoaded && "hidden"
+          }`}
           src="https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/6.png&w=600&h=600&output=webp"
+        />
+        <img
+          ref={(ref) => {
+            if (ref) setOnLoadTimer(ref);
+          }}
+          width={400}
+          height={400}
+          className={`rounded-2xl -scale-x-100 hover:rotate-6 hover:-scale-x-105 hover:scale-y-105 hover:shadow-2xl transition-transform ${
+            !gifLoaded && "hidden"
+          }`}
+          src="https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/QmcZ5QkP38GRJjYYBPtJQoJ7MZXM7aENjQocn7k26qC13M&w=600&h=600&output=gif&n=-1"
+          onLoad={() => setGifLoaded(true)}
         />
       </div>
     </section>
