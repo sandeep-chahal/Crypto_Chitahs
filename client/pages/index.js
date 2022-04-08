@@ -43,13 +43,13 @@ export async function getStaticProps() {
   let mintedEvents, soldEvents;
   [mintedEvents, soldEvents] = await Promise.all([
     web3.nftContract.queryFilter(mintedFilter),
-    web3.nftContract.queryFilter(soldFilter, -1000),
+    web3.nftContract.queryFilter(soldFilter, -100000),
   ]);
 
   _totalMinted = mintedEvents.length;
   // restrict to last 10 events
   soldEvents = soldEvents.filter((event, i) => i < 10);
-  mintedEvents = soldEvents.filter((event, i) => i < 10);
+  mintedEvents = mintedEvents.filter((event, i) => i < 10);
 
   // get minted
   const minted = await Promise.all(
