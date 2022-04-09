@@ -4,7 +4,7 @@ import SmallCard from "../small-card/";
 
 const RecentlySold = ({ nfts }) => {
   return (
-    <section className="px-5 md:px-20 lg:px-40 py-5 mt-10 bg-slate-100 text-slate-800">
+    <section className="px-2 md:px-20 lg:px-40 py-5 mt-10 bg-slate-100 text-slate-800">
       <h2 className="font-black text-2xl mb-6">Recently Sold</h2>
       {/* container */}
       <div className="flex flex-wrap">

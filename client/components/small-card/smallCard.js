@@ -5,7 +5,7 @@ import { shortenAddress } from "../../utils";
 const SmallCard = ({ nft, className, account }) => {
   return (
     <div
-      className={`flex my-4 p-2 px-4 items-start hover:bg-slate-200 rounded-lg transition-all cursor-pointer group ${className}`}
+      className={`flex my-4 p-2 px-1 md:px-4 items-start hover:bg-slate-200 rounded-lg transition-all cursor-pointer group ${className}`}
     >
       {/* left */}
       <img
