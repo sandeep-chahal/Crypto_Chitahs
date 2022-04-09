@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 
-const Search = ({ onSearch }) => {
+const Search = ({ onOpen }) => {
   const [search, setSearch] = useState();
 
   return (
@@ -15,7 +15,7 @@ const Search = ({ onSearch }) => {
         }}
         value={search || ""}
       />
-      <img src="/search.svg" className="w-4 absolute mr-2" onClick={onSearch} />
+      <img src="/search.svg" className="w-4 absolute mr-2" />
       {!!search && (
         <div className="absolute top-full left-0 bg-white w-full py-1 px-3 z-50 rounded-md font-semibold">
           <ul>
@@ -25,7 +25,12 @@ const Search = ({ onSearch }) => {
               .map((_, index) => (
                 <li className="flex items-center my-3">
                   <Link href={`/${search + index}`}>
-                    <a onClick={() => setSearch()}>
+                    <a
+                      onClick={() => {
+                        setSearch();
+                        if (onOpen) onOpen();
+                      }}
+                    >
                       Crypto Chitahs #{search + index}
                     </a>
                   </Link>
