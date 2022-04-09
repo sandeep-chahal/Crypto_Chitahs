@@ -14,6 +14,8 @@ contract MarketPlace {
 
     // tokenId => additional price
     mapping(uint256 => uint256) public boostedPrice;
+    //  tokenId => minted or not
+    mapping(uint256 => bool) public mintedTokens;
 
     constructor(
         address _owner,
@@ -38,6 +40,12 @@ contract MarketPlace {
 
     function setBasePrice(uint256 _price) public onlyOwner {
         basePrice = _price;
+    }
+
+    function setMintedTokens(uint256[] memory _tokens) public onlyOwner {
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            mintedTokens[_tokens[i]] = true;
+        }
     }
 
     function setBoostedPrice(
@@ -97,8 +105,11 @@ contract MarketPlace {
                     )
                 )
             );
-
-            prices[i] = boostedPrice[tokenId] + basePrice;
+            if (mintedTokens[tokenId] == true) {
+                prices[i] = 0;
+            } else {
+                prices[i] = boostedPrice[tokenId] + basePrice;
+            }
         }
         return prices;
     }
@@ -118,6 +129,8 @@ contract MarketPlace {
         owner.transfer(msg.value);
         boostedPrice[tokenId] = 0;
         totalMinted += 1;
+
+        mintedTokens[tokenId] = true;
 
         return true;
     }

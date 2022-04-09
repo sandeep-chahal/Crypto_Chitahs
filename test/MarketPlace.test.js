@@ -105,6 +105,18 @@ describe("Marketplace", () => {
         expect(_prices[i]).to.be.equal(prices[i].add(basePrice));
       }
     });
+    it("should return prices of nfts or 0 if minted", async () => {
+      const basePrice = await marketPlace.basePrice();
+
+      await (
+        await marketPlace.connect(user1).mint(10, {
+          value: ethers.utils.parseEther("1.25"),
+        })
+      ).wait();
+      const prices = await marketPlace.getPrices([5, 10]);
+      expect(prices[0]).to.be.equal(basePrice);
+      expect(prices[1]).to.be.equal(ethers.constants.Zero);
+    });
 
     it("should set minting state", async () => {
       // mint -> true
