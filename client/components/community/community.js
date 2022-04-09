@@ -2,7 +2,7 @@ import React from "react";
 
 const Community = () => {
   return (
-    <section className="px-5 md:px-20 lg:px-40 py-16">
+    <section className="px-5 md:px-20 lg:px-40 py-8 md:py-16">
       <h2 className="text-center mb-8">
         <span className="block text-3xl">Join Our</span>
         <span className="block text-3xl md:text-4xl font-black">Community</span>

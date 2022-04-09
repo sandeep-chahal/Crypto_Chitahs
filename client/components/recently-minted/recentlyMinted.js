@@ -31,7 +31,7 @@ const RecentlyMinted = ({ nfts }) => {
   }, [slider.current]);
 
   return (
-    <section className="mt-20">
+    <section className="mt-10 md:mt-20">
       <h2 className="px-5 md:px-20 lg:px-40 font-black text-2xl flex items-center justify-between">
         <span>Recently Minted</span>
         <button className="flex items-center group text-base">

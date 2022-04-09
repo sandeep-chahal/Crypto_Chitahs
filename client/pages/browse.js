@@ -36,7 +36,7 @@ const Browse = () => {
   useEffect(() => {
     if (prices[page * CARDS_PER_PAGE] !== undefined) {
       console.log("BROWSE: Prices already fetched");
-    } else if (web3 && web3.status === "READY" && !isFilterApplied) {
+    } else if (web3 && web3.provider && !isFilterApplied) {
       clearTimeout(priceFetchTimer.current);
       priceFetchTimer.current = setTimeout(fetchPrices, 1000);
     }
@@ -71,7 +71,7 @@ const Browse = () => {
     }
   };
   return (
-    <section className="px-5 md:px-20 lg:px-40 my-10">
+    <section className="px-5 md:px-20 lg:px-40 my-5 md:my-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-black text-lg md:text-2xl">
