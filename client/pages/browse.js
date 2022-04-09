@@ -71,11 +71,13 @@ const Browse = () => {
     }
   };
   return (
-    <section className="px-40 my-10">
+    <section className="px-5 md:px-20 lg:px-40 my-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-black text-2xl">Browse the collection</h1>
-          <p>Take a good look!</p>
+          <h1 className="font-black text-lg md:text-2xl">
+            Browse the collection
+          </h1>
+          <p className="text-sm md:text-base">Take a good look!</p>
         </div>
         <div className="flex items-center">
           <img
@@ -107,8 +109,8 @@ const Browse = () => {
       {/* filters */}
       <div className="">
         <div className="h-[1px] w-full bg-slate-200 mt-2" />
-        <div className="flex items-center mb-2">
-          <h3 className="text-xl font-bold">Filters</h3>
+        <div className="flex items-center my-2">
+          <h3 className="text-lg md:text-xl font-bold">Filters</h3>
           <img
             onClick={() => setFilterPopup(!filterPopup)}
             src="filter.svg"

@@ -99,16 +99,16 @@ const NFT = () => {
   if (isNaN(nftNumber)) return null;
   if (nftNumber < 1 || nftNumber > 3974) {
     return (
-      <section className="min-h-[80vh] px-40 mt-10">
+      <section className="min-h-[80vh] px-5 md:px-20 lg:px-40 mt-10">
         <h1 className="text-center">This NFT does not exist.</h1>
       </section>
     );
   }
   return (
-    <section className="min-h-[80vh] px-40 mt-10">
-      <div className="relative flex items-start">
+    <section className="min-h-[80vh] px-5 md:px-20 xl:px-40 mt-10">
+      <div className="relative flex flex-col md:flex-row items-start">
         <img
-          className="rounded-md w-[500px] h-[500px]"
+          className="w-full h-auto max-w-[400px] rounded-md md:max-w-none md:w-[350px] md:h-[350px] lg:w-[500px] lg:h-[500px]"
           src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=${getImageSize()}&h=${getImageSize()}&output=webp`}
           width={getImageSize()}
           height={getImageSize()}
@@ -119,8 +119,10 @@ const NFT = () => {
           }}
         />
 
-        <div className="ml-10">
-          <h1 className="font-black text-6xl">Crypto Chitahs #{nftNumber}</h1>
+        <div className="mt-5 md:mt-0 md:ml-10">
+          <h1 className="font-black text-xl md:text-4xl xl:text-6xl">
+            Crypto Chitahs #{nftNumber}
+          </h1>
           <div className="mt-5 flex items-center">
             <img
               title={likedItems[nftNumber] ? "Unlike" : "Like"}
@@ -145,7 +147,7 @@ const NFT = () => {
               }
             />
           </div>
-          <p className="mt-3 font-medium">
+          <p className="mt-3 font-medium text-sm lg:text-base">
             Coalition Crew 2.0 collection. What makes this project unique is the
             collective intelligence of our community. The utility of the Game
             Changers Academy, and the ability to contribute in saving wild
@@ -191,7 +193,7 @@ const NFT = () => {
         </div>
       </div>
       {/* next prev buttons */}
-      <div className="flex items-center justify-between mt-10">
+      <div className="flex items-center justify-between mb-10 md:mb-0 mt-10">
         <Link href={`${nftNumber === 1 ? 1 : nftNumber - 1}`}>
           <a>
             <img

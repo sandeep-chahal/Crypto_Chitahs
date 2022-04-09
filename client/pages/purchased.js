@@ -29,14 +29,14 @@ const Liked = () => {
   }, [web3]);
 
   return (
-    <section className="px-40 my-10">
+    <section className="px-5 md:px-20 lg:px-40 py-5 md:my-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-black text-2xl">Purchased NFTs</h1>
           <p>List of good decisions you made in the past!</p>
         </div>
       </div>
-      <ul className="flex flex-wrap items-start min-h-[60vh]">
+      <ul className="flex flex-wrap items-start justify-center md:justify-start min-h-[60vh]">
         {purchased && purchased.length ? (
           purchased.map((nft, index) => (
             <SmallCard

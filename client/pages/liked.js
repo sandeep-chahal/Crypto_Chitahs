@@ -10,11 +10,11 @@ const Liked = () => {
     .map((key) => key);
 
   return (
-    <section className="px-40 my-10">
+    <section className="px-5 md:px-20 lg:px-40 py-5 md:my-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-black text-2xl">Liked NFTs</h1>
-          <p>Oh yeah! Good old NFTs</p>
+          <h1 className="font-black text-lg md:text-2xl">Liked NFTs</h1>
+          <p className="text-ms md:text-base">Oh yeah! Good old NFTs</p>
         </div>
       </div>
       <ul className="flex flex-wrap justify-between">
