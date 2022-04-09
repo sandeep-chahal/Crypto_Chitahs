@@ -4,17 +4,23 @@ import ListingPreview from "../components/listing-preview";
 import RecentlyMinted from "../components/recently-minted";
 import RecentlySold from "../components/recently-sold";
 import Community from "../components/community";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { getServerSideWeb3, parseServerSideProps } from "../utils";
 
-const Home = ({ basePrice, minted, sold, totalMinted }) => {
-  const recentlyMinted = parseServerSideProps(JSON.parse(minted));
-  const recentlySold = parseServerSideProps(JSON.parse(sold));
-
+const Home = ({
+  basePrice,
+  _recentlyMinted,
+  _recentlySold,
+  totalMinted,
+  _nftPrices,
+}) => {
+  const recentlyMinted = parseServerSideProps(JSON.parse(_recentlyMinted));
+  const recentlySold = parseServerSideProps(JSON.parse(_recentlySold));
+  const nftPrices = _nftPrices.map((p) => BigNumber.from(p));
   return (
     <>
       <Hero basePrice={basePrice} totalMinted={totalMinted} />
-      <ListingPreview />
+      <ListingPreview nfts={nftPrices} />
       <RecentlyMinted nfts={recentlyMinted} />
       <Community />
       <RecentlySold nfts={recentlySold} />
@@ -52,7 +58,7 @@ export async function getStaticProps() {
   mintedEvents = mintedEvents.filter((event, i) => i < 10);
 
   // get minted
-  const minted = await Promise.all(
+  const recentlyMinted = await Promise.all(
     mintedEvents.map(async (event, index) => {
       const tx = await event.getTransaction();
       await tx.wait();
@@ -66,7 +72,7 @@ export async function getStaticProps() {
   );
 
   // get transferred
-  const sold = await Promise.all(
+  const recentlySold = await Promise.all(
     soldEvents.map(async (event, index) => {
       const tx = await event.getTransaction();
       await tx.wait();
@@ -79,13 +85,24 @@ export async function getStaticProps() {
     })
   );
   console.log("got server side props");
+
+  const nftPrices = (
+    await web3.marketPlaceContract.getPrices(
+      Array(8)
+        .fill(null)
+        .map((_, i) => i + 1)
+    )
+  ).map((p) => p._hex);
+  console.log(nftPrices);
+
   // Pass data to the page via props
   return {
     props: {
       basePrice: ethers.utils.formatEther(basePrice),
-      minted: JSON.stringify(minted),
-      sold: JSON.stringify(sold),
+      _recentlyMinted: JSON.stringify(recentlyMinted),
+      _recentlySold: JSON.stringify(recentlySold),
       totalMinted: _totalMinted,
+      _nftPrices: nftPrices,
     },
     revalidate: 10,
   };

@@ -4,18 +4,43 @@ import Card from "../components/card";
 import FilterSelector from "../components/filter-selector";
 import Attribute from "../components/attribute";
 import { useStore } from "../store";
+import { BigNumber, ethers } from "ethers";
 const CARDS_PER_PAGE = 100;
 
 const Browse = () => {
   const router = useRouter();
-  const { db } = useStore();
+  const { db, web3, prices, setPrices } = useStore();
   const [page, setPage] = useState(1);
   const [filterPopup, setFilterPopup] = useState(false);
   const [filters, setFilters] = useState(router.query || {});
   const [filteredItems, setFilteredItems] = useState([]);
+  const priceFetchTimer = useRef(null);
   const input = useRef();
 
   const isFilterApplied = Object.keys(filters).length !== 0;
+
+  const fetchPrices = async () => {
+    const nftNumbers = Array(CARDS_PER_PAGE)
+      .fill(null)
+      .map((_, i) => i + 1 + (page - 1) * CARDS_PER_PAGE)
+      .filter((n) => n <= 3974);
+    const _prices = await web3.marketPlaceContract.getPrices(nftNumbers);
+    const newPrices = {};
+    nftNumbers.forEach((nftNumber, index) => {
+      newPrices[nftNumber] = _prices[index];
+    });
+    setPrices((p) => ({ ...p, ...newPrices }));
+    console.log("BROWSE: Newly fetched Prices", newPrices);
+  };
+
+  useEffect(() => {
+    if (prices[page * CARDS_PER_PAGE] !== undefined) {
+      console.log("BROWSE: Prices already fetched");
+    } else if (web3 && web3.status === "READY" && !isFilterApplied) {
+      clearTimeout(priceFetchTimer.current);
+      priceFetchTimer.current = setTimeout(fetchPrices, 1000);
+    }
+  }, [page, web3, isFilterApplied]);
 
   useEffect(() => {
     if (db === null || !isFilterApplied) return null;
@@ -141,7 +166,7 @@ const Browse = () => {
             .fill(null)
             .map((_, i) => i + 1 + (page - 1) * CARDS_PER_PAGE)
             .filter((n) => n <= 3974)
-            .map((n) => <Card key={n} nftNumber={n} />)
+            .map((n) => <Card key={n} nftNumber={n} price={prices[n]} />)
         )}
       </ul>
     </section>

@@ -12,6 +12,7 @@ const context = createContext();
 const ContextProvider = ({ children }) => {
   const [db, setDb] = useState(null);
   const [likedItems, setLikedItems] = useState({});
+  const [prices, setPrices] = useState({});
   const [web3, setWeb3] = useState({
     provider: null,
     nftContract: null,
@@ -139,6 +140,8 @@ const ContextProvider = ({ children }) => {
         likedItems,
         updateLiked,
         web3,
+        prices,
+        setPrices,
       }}
     >
       {children}

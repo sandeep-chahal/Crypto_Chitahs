@@ -1,8 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import { useStore } from "../../store";
+import { ethers } from "ethers";
 
-const Card = ({ nftNumber }) => {
+const Card = ({ nftNumber, price }) => {
   const { likedItems, updateLiked } = useStore();
   return (
     <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-sm shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-all group">
@@ -29,6 +30,14 @@ const Card = ({ nftNumber }) => {
             onClick={() => updateLiked(nftNumber, !likedItems[nftNumber])}
           />
         </div>
+        {price &&
+          (parseFloat(price) ? (
+            <p className="font-semibold text-green-600">
+              {ethers.utils.formatEther(price)} ETH
+            </p>
+          ) : (
+            <p className="font-semibold text-red-400">Minted</p>
+          ))}
         <Link href={`/${nftNumber}`}>
           <a className="flex items-center group">
             View{" "}

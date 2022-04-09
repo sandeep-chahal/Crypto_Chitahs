@@ -1,8 +1,7 @@
 import React from "react";
 import Card from "../card";
-import { getSampleNfts } from "../../utils";
 
-const ListingPreview = () => {
+const ListingPreview = ({ nfts }) => {
   return (
     <section className="px-40">
       <h2 className="font-black text-2xl mb-6 flex items-center justify-between">
@@ -16,8 +15,8 @@ const ListingPreview = () => {
         </button>
       </h2>
       <ul className="flex flex-wrap justify-between">
-        {getSampleNfts().map((nft, i) => (
-          <Card nftNumber={i + 1} key={i} />
+        {nfts.map((nft, i) => (
+          <Card price={nft} nftNumber={i + 1} key={i} />
         ))}
       </ul>
     </section>
