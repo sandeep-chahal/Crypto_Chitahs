@@ -15,7 +15,7 @@ export default ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta http-equiv="Content-Language" content="en_US" />
+        <meta httpEquiv="Content-Language" content="en_US" />
         <meta name="theme-color" content="#0F172A" />
         <meta
           name="description"

@@ -1,5 +1,6 @@
 import { ethers } from "ethers";
 import React from "react";
+import Link from "next/link";
 import { shortenAddress } from "../../utils";
 
 const WideCard = ({ nft, className }) => {
@@ -31,7 +32,7 @@ const WideCard = ({ nft, className }) => {
           </div>
         </div>
         <button className="flex items-center group">
-          View{" "}
+          <Link href={`/${nft.tokenId.toNumber()}`}>View </Link>
           <img
             className="ml-2 w-4 transition-transform group-hover:translate-x-2"
             src="/right-arrow.svg"

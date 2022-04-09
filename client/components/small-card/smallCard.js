@@ -37,7 +37,12 @@ const SmallCard = ({ nft, className, account }) => {
           {ethers.utils.formatEther(nft.tx.value)} ETH
         </div>
         <button className="flex items-center group">
-          View on explorer{" "}
+          <a
+            href={`${process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL}/${nft.tx.hash}`}
+            target="_blank"
+          >
+            View on explorer{" "}
+          </a>
           <img
             className="ml-2 w-4 transition-transform group-hover:translate-x-2"
             src="/right-arrow.svg"

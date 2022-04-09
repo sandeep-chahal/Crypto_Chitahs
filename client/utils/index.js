@@ -2,6 +2,45 @@ import { ethers, BigNumber } from "ethers";
 import MarketPlaceArtifact from "../artifacts/contracts/MarketPlace.sol/MarketPlace.json";
 import NFTArtifact from "../artifacts/contracts/CryptoChitahs.sol/CryptoChitahs.json";
 
+export const getSwitchNetwork = (provider) => {
+  return async () => {
+    const chainId = ethers.utils
+      .hexlify(parseInt(process.env.NEXT_PUBLIC_CHAIN_ID))
+      .replace("0x0", "0x");
+    console.log("Switching to ", chainId);
+    try {
+      await provider.provider.request({
+        method: "wallet_switchEthereumChain",
+        params: [
+          {
+            chainId: chainId,
+          },
+        ],
+      });
+    } catch (err) {
+      if (err.code === 4902) {
+        try {
+          console.log("Switching network");
+          await provider.provider.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: chainId,
+                chainName: process.NEXT_PUBLIC_NETWORK_NAME,
+                rpcUrls: [process.env.NEXT_PUBLIC_RPC_URL],
+                blockExplorerUrls: [process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL],
+              },
+            ],
+          });
+        } catch (addError) {
+          console.error(addError);
+        }
+      }
+      console.log(err);
+    }
+  };
+};
+
 export const getSampleNfts = (n = 0, t = 8) => {
   return Array(t)
     .fill(0)

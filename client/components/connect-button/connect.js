@@ -7,9 +7,9 @@ const Connect = () => {
 
   const getButtonText = () => {
     if (web3.status === "LOADING") return "Loading";
-    if (web3.status === "NO_PROVIDER") return "Install Metamask";
-    if (web3.status === "WRONG_NETWORK") return "Wrong Network";
     if (web3.status === "NO_ACCOUNT") return "Connect";
+    if (web3.status === "WRONG_NETWORK") return "Wrong Network";
+    if (web3.status === "NO_METAMASK") return "Install Metamask";
     if (web3.status === "READY")
       return web3.account.slice(0, 3) + "..." + web3.account.slice(39);
   };
@@ -17,49 +17,13 @@ const Connect = () => {
   const requestAccount = async () => {
     await web3.provider.provider.request({ method: "eth_requestAccounts" });
   };
-  const switchNetwork = async () => {
-    const chainId = ethers.utils
-      .hexlify(parseInt(process.env.NEXT_PUBLIC_CHAIN_ID))
-      .replace("0x0", "0x");
-    console.log("Switching to ", chainId);
-    try {
-      await web3.provider.provider.request({
-        method: "wallet_switchEthereumChain",
-        params: [
-          {
-            chainId: chainId,
-          },
-        ],
-      });
-    } catch (err) {
-      if (err.code === 4902) {
-        try {
-          console.log("Switching network");
-          await web3.provider.provider.request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: chainId,
-                chainName: process.NEXT_PUBLIC_NETWORK_NAME,
-                rpcUrls: [process.env.NEXT_PUBLIC_RPC_URL],
-                blockExplorerUrls: [process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL],
-              },
-            ],
-          });
-        } catch (addError) {
-          console.error(addError);
-        }
-      }
-      console.log(err);
-    }
-  };
 
   const handleClick = () => {
-    if (web3.status === "NO_PROVIDER") {
+    if (web3.status === "NO_METAMASK") {
       window.open("https://metamask.io/");
     }
     if (web3.status === "WRONG_NETWORK") {
-      switchNetwork();
+      web3.switchNetwork();
     }
     if (web3.status === "NO_ACCOUNT") {
       requestAccount();

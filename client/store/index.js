@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import detectEthereumProvider from "@metamask/detect-provider";
 
 import { DB } from "../utils/db";
+import { getSwitchNetwork } from "../utils";
 import MarketPlaceArtifact from "../artifacts/contracts/MarketPlace.sol/MarketPlace.json";
 import NFTArtifact from "../artifacts/contracts/CryptoChitahs.sol/CryptoChitahs.json";
 
@@ -16,45 +17,51 @@ const ContextProvider = ({ children }) => {
     nftContract: null,
     marketPlaceContract: null,
     account: null,
-    status: "LOADING", //LOADING, NO_PROVIDER, WRONG_NETWORK, NO_ACCOUNT, READY,
-    basePrice: null,
+    status: "LOADING", //LOADING, NO_METAMASK, WRONG_NETWORK, NO_ACCOUNT, READY,
+    switchNetwork: () => {},
   });
 
   useEffect(() => {
     loadAttributes();
-    loadContractsAndData();
+    loadWeb3();
   }, []);
 
-  const loadContractsAndData = async () => {
+  const loadWeb3 = async () => {
     if (web3.status !== "LOADING") {
-      setWeb3({
+      setWeb3((web3) => ({
+        ...web3,
         status: "LOADING",
-        provider: null,
-        nftContract: null,
-        marketPlaceContract: null,
-        account: null,
-      });
+      }));
     }
+    let provider, chainId, accounts;
+    let isWrongNetwork = true;
     const _provider = await detectEthereumProvider();
-    if (!_provider) {
-      console.log("Metamask not found");
-      setWeb3({
-        provider: null,
-        nftContract: null,
-        marketPlaceContract: null,
-        status: "NO_PROVIDER",
-      });
-      return;
-    }
-    const provider = new ethers.providers.Web3Provider(_provider, "any");
-    // add listeners
-    _provider.on("accountsChanged", function (accounts) {
-      window.location.reload();
-    });
+    let switchNetwork = () => {};
 
-    _provider.on("networkChanged", function (networkId) {
-      window.location.reload();
-    });
+    if (_provider) {
+      provider = new ethers.providers.Web3Provider(_provider, "any");
+      chainId = (await provider.getNetwork()).chainId;
+      accounts = await provider.listAccounts();
+      isWrongNetwork = process.env.NEXT_PUBLIC_CHAIN_ID != chainId;
+
+      switchNetwork = getSwitchNetwork(provider);
+
+      // add listeners
+      _provider.on("accountsChanged", function (accounts) {
+        window.location.reload();
+      });
+
+      _provider.on("networkChanged", function (networkId) {
+        window.location.reload();
+      });
+      console.log("Store: MetaMask Found");
+    }
+    if (!_provider || isWrongNetwork) {
+      provider = new ethers.providers.JsonRpcProvider(
+        process.env.NEXT_PUBLIC_RPC_URL
+      );
+      console.log("Store: MetaMask Not Found OR Wrong Network");
+    }
 
     // --------
     const nftContract = new ethers.Contract(
@@ -67,38 +74,19 @@ const ContextProvider = ({ children }) => {
       MarketPlaceArtifact.abi,
       provider
     );
-    const { chainId } = await provider.getNetwork();
-    const accounts = await provider.listAccounts();
 
-    const isWrongNetwork = process.env.NEXT_PUBLIC_CHAIN_ID != chainId;
-    let basePrice = null;
-    if (!isWrongNetwork) {
-      try {
-        basePrice = await marketPlaceContract.basePrice();
-      } catch (err) {
-        console.log(err);
-      }
-      console.log(basePrice);
-    }
+    let status = "READY";
+    if (!accounts || accounts.length === 0) status = "NO_ACCOUNT";
+    if (isWrongNetwork) status = "WRONG_NETWORK";
+    if (!_provider) status = "NO_METAMASK";
 
-    console.log(
-      !isWrongNetwork
-        ? accounts.length
-          ? "READY"
-          : "NO_ACCOUNT"
-        : "WRONG_NETWORK"
-    );
     setWeb3({
       provider,
-      nftContract: !isWrongNetwork ? nftContract : null,
-      marketPlaceContract: !isWrongNetwork ? marketPlaceContract : null,
-      account: accounts.length ? accounts[0] : null,
-      basePrice,
-      status: !isWrongNetwork
-        ? accounts.length
-          ? "READY"
-          : "NO_ACCOUNT"
-        : "WRONG_NETWORK",
+      nftContract: nftContract,
+      marketPlaceContract: marketPlaceContract,
+      account: accounts && accounts.length ? accounts[0] : null,
+      status,
+      switchNetwork,
     });
   };
 
@@ -114,13 +102,13 @@ const ContextProvider = ({ children }) => {
       }, {});
       setLikedItems(_likedItems);
     } catch (err) {
-      console.error(err);
+      console.error("Store: ", err);
     }
   };
 
   const updateLiked = (key, value) => {
     if (!db) {
-      console.log("DB not initialized");
+      console.log("Store: DB not initialized");
       return;
     }
     setLikedItems((lk) => ({ ...lk, [key]: value }));
@@ -128,19 +116,19 @@ const ContextProvider = ({ children }) => {
       db.liked
         .insert({ key })
         .then(() => {
-          console.log("Inserted!");
+          console.log("Store: Inserted!");
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Store: ", err);
         });
     else
       db.liked
         .remove(key)
         .then(() => {
-          console.log("Removed!");
+          console.log("Store: Removed!");
         })
         .catch((err) => {
-          console.log(err);
+          console.log("Store: ", err);
         });
   };
 

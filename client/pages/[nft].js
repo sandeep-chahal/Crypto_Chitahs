@@ -20,13 +20,26 @@ const NFT = () => {
   const [error, setError] = useState(null);
   const router = useRouter();
   const { db, likedItems, updateLiked, web3 } = useStore();
-  const nftNumber = parseInt(router.query.nft);
+
+  let nftNumber;
+  if (typeof window !== "undefined")
+    nftNumber = parseInt(window.location.pathname.replace("/", ""));
+  else nftNumber = parseInt(router.query.nft);
 
   useEffect(() => {
     (async () => {
-      if (db && nftNumber && web3.marketPlaceContract) {
-        const attrs = await db.items.get(nftNumber);
-        setAttrs(attrs);
+      if (db && nftNumber && !attrs && nftNumber > 0 && nftNumber <= 3974) {
+        console.log("NFT: Querying Attributes From IndexedDB");
+        const attrs = await db.items.get(nftNumber).then((attrs) => {
+          setAttrs(attrs);
+        });
+      }
+      if (
+        nftNumber &&
+        web3.marketPlaceContract &&
+        nftNumber > 0 &&
+        nftNumber <= 3974
+      ) {
         let filterToMe = web3.nftContract.filters.Transfer(
           ethers.constants.AddressZero,
           null,
@@ -38,15 +51,13 @@ const NFT = () => {
           web3.nftContract.queryFilter(filterToMe),
         ]);
 
-        console.log("events", events);
         if (events.length > 0) {
-          console.log("Already Minted");
+          console.log("NFT: Already Minted");
           const tx = await events[0].getTransaction();
           await tx.wait();
           const price = tx.value;
           setPrice(price);
           setIsMinted(true);
-          console.log("minted price", price);
         } else {
           setPrice(price[0]);
           setIsMinted(false);
@@ -66,13 +77,13 @@ const NFT = () => {
             value: price,
           });
         const receipt = await tx.wait();
-        console.log("receipt", receipt, price);
+        console.log("NFT: receipt", receipt, price);
         setIsMinted(true);
         setMinting(false);
       } catch (err) {
-        console.log(err);
+        console.log("NFT: ", err);
         if (err.data && err.data.message) {
-          console.log(err.data.message.split("'")[1]);
+          console.log("NFT: ", err.data.message.split("'")[1]);
           setError(
             "Contract threw this error: " + err.data.message.split("'")[1]
           );
@@ -84,7 +95,15 @@ const NFT = () => {
     }
   };
 
-  if (!nftNumber) return null;
+  console.log("NFT: nftNumber", nftNumber);
+  if (isNaN(nftNumber)) return null;
+  if (nftNumber < 1 || nftNumber > 3974) {
+    return (
+      <section className="min-h-[80vh] px-40 mt-10">
+        <h1 className="text-center">This NFT does not exist.</h1>
+      </section>
+    );
+  }
   return (
     <section className="min-h-[80vh] px-40 mt-10">
       <div className="relative flex items-start">
@@ -142,6 +161,7 @@ const NFT = () => {
               isMinted={isMinted}
               isMinting={minting}
               onClick={mintNFT}
+              status={web3.status}
             />
           </div>
           <div className="mt-5">
