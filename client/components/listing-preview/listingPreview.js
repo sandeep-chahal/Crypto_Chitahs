@@ -3,7 +3,7 @@ import Card from "../card";
 
 const ListingPreview = ({ nfts }) => {
   return (
-    <section className="px-40">
+    <section className="px-5 md:px-20 lg:px-40">
       <h2 className="font-black text-2xl mb-6 flex items-center justify-between">
         <span>Listings</span>
         <button className="flex items-center group text-base">

@@ -2,9 +2,9 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="px-40 bg-slate-100 text-slate-800 py-5">
+    <footer className="px-5 md:px-20 lg:px-40 bg-slate-100 text-slate-800 py-5">
       <div>
-        <p className="m-auto text-center w-1/3">
+        <p className="m-auto text-center mb-2 md:mb-0 md:w-2/3 lg:w-1/3">
           This is not the real Crypto Chitahs NFT Collection. The original NFT
           collection can be found{" "}
           <a

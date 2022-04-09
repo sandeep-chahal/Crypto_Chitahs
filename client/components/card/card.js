@@ -6,7 +6,7 @@ import { ethers } from "ethers";
 const Card = ({ nftNumber, price }) => {
   const { likedItems, updateLiked } = useStore();
   return (
-    <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-sm shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-all group">
+    <div className="bg-slate-100 text-slate-800 rounded-lg p-3 shadow-sm shadow-slate-100 mx-4 my-6 hover:scale-105 hover:-rotate-6 transition-all group w-full sm:w-auto">
       <img
         src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=400&h=400&output=webp`}
         width={200}
@@ -16,7 +16,7 @@ const Card = ({ nftNumber, price }) => {
           if (!e.currentTarget.src.includes("w=450&h=450"))
             e.currentTarget.src = `https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=450&h=450&output=webp`;
         }}
-        className="rounded-lg group-hover:scale-125 group-hover:-translate-y-5 transition-all"
+        className="rounded-lg group-hover:scale-125 group-hover:-translate-y-5 transition-all w-full sm:w-[200px]"
       />
 
       <div className="py-1">

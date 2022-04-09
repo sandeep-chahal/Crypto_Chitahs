@@ -44,7 +44,7 @@ const SmallCard = ({ nft, className, account }) => {
             View on explorer{" "}
           </a>
           <img
-            className="ml-2 w-4 transition-transform group-hover:translate-x-2"
+            className="ml-1 md:ml-2 w-4 transition-transform group-hover:translate-x-2"
             src="/right-arrow.svg"
           />
         </button>

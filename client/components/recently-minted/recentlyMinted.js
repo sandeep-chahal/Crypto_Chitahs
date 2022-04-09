@@ -32,7 +32,7 @@ const RecentlyMinted = ({ nfts }) => {
 
   return (
     <section className="mt-20">
-      <h2 className="px-40 font-black text-2xl flex items-center justify-between">
+      <h2 className="px-5 md:px-20 lg:px-40 font-black text-2xl flex items-center justify-between">
         <span>Recently Minted</span>
         <button className="flex items-center group text-base">
           View All{" "}
@@ -44,7 +44,7 @@ const RecentlyMinted = ({ nfts }) => {
       </h2>
       <ul
         ref={slider}
-        className="flex overflow-x-auto no-scrollbar py-2 cursor-grab active:cursor-grabbing pl-36"
+        className="flex overflow-x-auto no-scrollbar py-2 cursor-grab active:cursor-grabbing md:pl-16 lg:pl-36"
       >
         {nfts && nfts.length ? (
           nfts.map((nft, i) => (

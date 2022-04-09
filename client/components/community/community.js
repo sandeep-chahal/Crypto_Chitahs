@@ -2,12 +2,12 @@ import React from "react";
 
 const Community = () => {
   return (
-    <section className="px-40 py-16">
+    <section className="px-5 md:px-20 lg:px-40 py-16">
       <h2 className="text-center mb-8">
         <span className="block text-3xl">Join Our</span>
-        <span className="block text-4xl font-black">Community</span>
+        <span className="block text-3xl md:text-4xl font-black">Community</span>
       </h2>
-      <p className="w-1/2 mx-auto text-center font-medium">
+      <p className="md:w-2/3 lg:w-2/3 xl:w-1/2 mx-auto text-center font-medium">
         Come join the Crypto Chitahs Discord community! We're a friendly and
         helpful bunch, and we're always happy to chat about all things crypto.
         Whether you're a beginner or a seasoned pro, we're sure you'll find
