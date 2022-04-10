@@ -36,11 +36,15 @@ const ListingPreview = ({ nfts }) => {
           </a>
         </Link>
       </motion.h2>
-      <ul className="flex flex-wrap justify-between">
+      <motion.ul
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-wrap justify-between"
+      >
         {nfts.map((nft, i) => (
           <Card price={nft} nftNumber={i + 1} key={i} />
         ))}
-      </ul>
+      </motion.ul>
     </section>
   );
 };

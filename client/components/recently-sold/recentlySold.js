@@ -1,5 +1,4 @@
 import React from "react";
-import { getSampleNfts } from "../../utils";
 import SmallCard from "../small-card/";
 
 const RecentlySold = ({ nfts }) => {
