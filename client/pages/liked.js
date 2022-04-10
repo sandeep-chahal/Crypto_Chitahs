@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import Card from "../components/card";
 import { useStore } from "../store";
 
@@ -10,7 +11,11 @@ const Liked = () => {
     .map((key) => key);
 
   return (
-    <section className="px-5 md:px-20 lg:px-40 py-5 md:my-10">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="px-5 md:px-20 lg:px-40 py-5 md:my-10"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-black text-lg md:text-2xl">Liked NFTs</h1>
@@ -24,7 +29,7 @@ const Liked = () => {
           <p>No liked items</p>
         )}
       </ul>
-    </section>
+    </motion.section>
   );
 };
 export default Liked;

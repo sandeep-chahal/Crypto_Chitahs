@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Hero = ({ basePrice, totalMinted }) => {
   const [gifLoaded, setGifLoaded] = useState(false);
@@ -13,7 +14,15 @@ const Hero = ({ basePrice, totalMinted }) => {
   return (
     <section className="flex px-5 md:px-20 lg:px-40 md:h-[80vh] my-10 md:my-0">
       {/* Left Side */}
-      <div className="flex flex-col justify-center items-start lg:text-[17char] md:w-1/2 mr-3">
+      <motion.div
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+        }}
+        className="flex flex-col justify-center items-start lg:text-[17char] md:w-1/2 mr-3"
+      >
         <h1 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 font-sans">
           Discover And Collect Rare Chitahs From The Wild
         </h1>
@@ -49,26 +58,48 @@ const Hero = ({ basePrice, totalMinted }) => {
             Browse
           </a>
         </Link>
-      </div>
+      </motion.div>
       {/* Right Side */}
       <div className="hidden md:flex justify-center items-center md:w-2/5 lg:w-1/2">
-        <img
+        <motion.img
+          transition={{ type: "spring", stiffness: 200 }}
+          initial={{
+            scaleX: -0.5,
+            scaleY: 0.5,
+          }}
+          animate={{
+            scaleX: -1,
+            scaleY: 1,
+          }}
+          whileHover={{
+            rotateZ: 25,
+            transition: { duration: 0.3, stiffness: 100 },
+          }}
           width={400}
           height={400}
-          className={`rounded-2xl -scale-x-100 hover:rotate-6 hover:-scale-x-105 hover:scale-y-105 hover:shadow-2xl transition-transform ${
-            gifLoaded && "hidden"
-          }`}
+          className={`rounded-2xl -scale-x-100  ${gifLoaded && "hidden"}`}
           src="https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/6.png&w=600&h=600&output=webp"
         />
-        <img
+        <motion.img
+          transition={{ type: "spring", stiffness: 200 }}
+          initial={{
+            scaleX: -0.5,
+            scaleY: 0.5,
+          }}
+          animate={{
+            scaleX: -1,
+            scaleY: 1,
+          }}
+          whileHover={{
+            rotateZ: 25,
+            transition: { duration: 0.3, stiffness: 100 },
+          }}
           ref={(ref) => {
             if (ref) setOnLoadTimer(ref);
           }}
           width={400}
           height={400}
-          className={`rounded-2xl -scale-x-100 hover:rotate-6 hover:-scale-x-105 hover:scale-y-105 hover:shadow-2xl transition-transform ${
-            !gifLoaded && "hidden"
-          }`}
+          className={`rounded-2xl -scale-x-100 ${!gifLoaded && "hidden"}`}
           src="https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/QmcZ5QkP38GRJjYYBPtJQoJ7MZXM7aENjQocn7k26qC13M&w=600&h=600&output=gif&n=-1"
           onLoad={() => setGifLoaded(true)}
         />

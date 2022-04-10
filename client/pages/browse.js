@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 import Card from "../components/card";
 import FilterSelector from "../components/filter-selector";
 import Attribute from "../components/attribute";
@@ -71,7 +72,11 @@ const Browse = () => {
     }
   };
   return (
-    <section className="px-5 md:px-20 lg:px-40 my-5 md:my-10">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="px-5 md:px-20 lg:px-40 my-5 md:my-10"
+    >
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-black text-lg md:text-2xl">
@@ -171,7 +176,7 @@ const Browse = () => {
             .map((n) => <Card key={n} nftNumber={n} price={prices[n]} />)
         )}
       </ul>
-    </section>
+    </motion.section>
   );
 };
 export default Browse;
