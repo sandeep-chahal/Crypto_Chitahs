@@ -123,11 +123,12 @@ const NFT = () => {
   return (
     <section className="min-h-[80vh] px-5 md:px-20 xl:px-40 mt-10">
       <div className="relative flex flex-col md:flex-row items-start">
-        <motion.figure layoutId={`${nftNumber}-image`}>
+        <motion.figure
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+        >
           <img
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
             className="w-full h-auto max-w-[400px] rounded-md md:max-w-none md:w-[350px] md:h-[350px] lg:w-[500px] lg:h-[500px]"
             src={`https://images.weserv.nl/?url=https://cloudflare-ipfs.com/ipfs/Qmf1ppzDanbYTEKL8WE1vLSJL4yKGWejAsr6g8Fnb6WkKL/${nftNumber}.png&w=${getImageSize()}&h=${getImageSize()}&output=webp`}
             width={getImageSize()}
@@ -142,7 +143,6 @@ const NFT = () => {
 
         <div className="mt-5 md:mt-0 md:ml-10">
           <motion.h1
-            layoutId={`${nftNumber}-title`}
             {...getFramerProps(0)}
             className="font-black text-xl md:text-4xl xl:text-6xl"
           >

@@ -70,10 +70,11 @@ const Hero = ({ basePrice, totalMinted }) => {
         </motion.div>
         <Link href="/browse">
           <motion.a
-            {...getFramerProps(0)}
-            className="mt-5 md:mt-10 font-semibold border-2 rounded-md px-5 py-2 hover:bg-white hover:-translate-y-2 hover:text-slate-900 transition-all"
+            {...getFramerProps(2)}
+            className="mt-5 md:mt-10 font-semibold border-2 rounded-md px-5 py-2 bg-white text-slate-800 flex items-center transition-all cursor-pointer"
           >
-            Browse
+            <img src="/animal.svg" className="w-7 h-7 mr-2" />
+            <span>Browse</span>
           </motion.a>
         </Link>
       </div>
